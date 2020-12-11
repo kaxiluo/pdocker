@@ -1,0 +1,38 @@
+version: "3.8"
+
+networks: 
+  base-bridge:
+      driver: bridge
+
+services: 
+    php7.4-fpm:
+        build: ./php7.4-fpm
+        volumes:
+        - ./php7.4-fpm/php.ini:/usr/local/etc/php/php.ini
+        - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
+        tty: true
+        expose:
+        - "9000"
+        networks:
+        - base-bridge  
+    redis:
+        build: ./redis
+        volumes:
+        - ${DATA_PATH_HOST}/redis:/data
+        ports:
+        - "${REDIS_PORT}:6379"
+        networks:
+        - base-bridge   
+    nginx:  
+        build: ./nginx
+        volumes:
+        - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
+        - ${NGINX_HOST_LOG_PATH}:/var/log/nginx
+        - ${NGINX_SITES_PATH}:/etc/nginx/sites-available
+        - ${NGINX_SSL_PATH}:/etc/nginx/ssl
+        ports:
+        - "80:80"
+        - "443:443"
+        networks:
+        - base-bridge
+
