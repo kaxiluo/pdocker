@@ -11,14 +11,28 @@ RUN set -ex \
     # 添加这么多扩展是因为后面我们编译 swoole imap 需要用到 
     && apk add --no-cache vim git autoconf openssl-dev build-base zlib-dev re2c libpng-dev oniguruma-dev imap-dev
 
-COPY swoole-4.4.19.tgz /tmp/swoole-4.4.19.tgz
+COPY ext/swoole-4.4.19.tgz /tmp/swoole-4.4.19.tgz
+COPY ext/redis-5.3.2.tgz /tmp/redis-5.3.2.tgz
+COPY ext/igbinary-3.1.6.tgz /tmp/igbinary-3.1.6.tgz
 
 # php ext
 RUN set -ex \
     && docker-php-ext-install gd pdo_mysql mysqli sockets pcntl imap bcmath \
     && cd /tmp \
-    # swoole
     && docker-php-source extract \
+    # redis
+    && tar -zxvf redis-5.3.2.tgz \ 
+    && mv redis-5.3.2 /usr/src/php/ext/redis \
+    && docker-php-ext-install redis \
+    && docker-php-ext-enable redis \
+    && rm redis-5.3.2.tgz \
+    # igbinary
+    && tar -zxvf igbinary-3.1.6.tgz \ 
+    && mv igbinary-3.1.6 /usr/src/php/ext/igbinary \
+    && docker-php-ext-install igbinary \
+    && docker-php-ext-enable igbinary \
+    && rm igbinary-3.1.6.tgz \
+    # swoole
     && tar -zxvf swoole-4.4.19.tgz \
     && mv swoole-4.4.19 /usr/src/php/ext/swoole \
     && docker-php-ext-configure swoole --enable-openssl --enable-sockets --enable-http2 --enable-mysqlnd \
