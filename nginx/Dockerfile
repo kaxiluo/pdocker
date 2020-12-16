@@ -12,6 +12,8 @@ RUN set -ex \
 RUN rm -rf /var/cache/apk/* && \
     rm -rf /tmp/*
 
+COPY tengine-2.3.2.tar.gz /tmp/tengine.tar.gz
+
 ENV CONFIG "\
         --prefix=/etc/nginx \
         --sbin-path=/usr/sbin/nginx \
@@ -76,10 +78,13 @@ RUN     addgroup -S nginx \
                 libxslt-dev \
                 gd-dev \
                 geoip-dev \
-        && curl -L "https://github.com/alibaba/tengine/archive/$TENGINE_VERSION.tar.gz" -o tengine.tar.gz \
+        #&& curl -L "https://github.com/alibaba/tengine/archive/$TENGINE_VERSION.tar.gz" -o tengine.tar.gz \
+        #&& mkdir -p /usr/src \
+        #&& tar -zxC /usr/src -f tengine.tar.gz \
+        #&& rm tengine.tar.gz \
         && mkdir -p /usr/src \
-        && tar -zxC /usr/src -f tengine.tar.gz \
-        && rm tengine.tar.gz \
+        && tar -zxC /usr/src -f /tmp/tengine.tar.gz \
+        && rm /tmp/tengine.tar.gz \
         && cd /usr/src/tengine-$TENGINE_VERSION \
         && curl -L "https://github.com/openresty/headers-more-nginx-module/archive/v0.33.tar.gz" -o more.tar.gz \
         && tar -zxC /usr/src/tengine-$TENGINE_VERSION/modules -f more.tar.gz \
@@ -136,12 +141,7 @@ RUN     addgroup -S nginx \
         && ln -sf /dev/stdout /var/log/nginx/access.log \
         && ln -sf /dev/stderr /var/log/nginx/error.log
 
-ARG PHP_UPSTREAM_CONTAINER=php7.4-fpm
-ARG PHP_UPSTREAM_PORT=9000
-
-# Set upstream conf and remove the default conf
-RUN echo "upstream php-upstream { server ${PHP_UPSTREAM_CONTAINER}:${PHP_UPSTREAM_PORT}; }" > /etc/nginx/conf.d/upstream.conf
-
+COPY upstream.conf /etc/nginx/conf.d/upstream.conf
 COPY nginx.conf /etc/nginx/nginx.conf
 
 EXPOSE 80 443

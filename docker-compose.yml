@@ -15,6 +15,16 @@ services:
         - "9000"
         networks:
         - base-bridge  
+    php7.1-fpm:
+        build: ./php7.1-fpm
+        volumes:
+        - ./php7.1-fpm/php.ini:/usr/local/etc/php/php.ini
+        - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
+        tty: true
+        expose:
+        - "9000"
+        networks:
+        - base-bridge      
     redis:
         build: ./redis
         volumes:

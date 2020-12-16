@@ -1,4 +1,5 @@
-FROM php:7.4.13-fpm-alpine3.12
+FROM php:7.1-fpm-alpine3.9
+##todo 合并php
 
 # apk 是 alpine 的一个包管理器
 RUN set -ex \
@@ -8,10 +9,8 @@ RUN set -ex \
     && sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories \
     # 更新包列表
     && apk update \
-    # 添加扩展
     && apk add --no-cache vim git autoconf openssl-dev build-base zlib-dev re2c libpng-dev oniguruma-dev imap-dev
 
-COPY ext/swoole-4.4.19.tgz /tmp/swoole-4.4.19.tgz
 COPY ext/redis-5.3.2.tgz /tmp/redis-5.3.2.tgz
 COPY ext/igbinary-3.1.6.tgz /tmp/igbinary-3.1.6.tgz
 
@@ -32,13 +31,6 @@ RUN set -ex \
     && docker-php-ext-install igbinary \
     && docker-php-ext-enable igbinary \
     && rm igbinary-3.1.6.tgz \
-    # swoole
-    && tar -zxvf swoole-4.4.19.tgz \
-    && mv swoole-4.4.19 /usr/src/php/ext/swoole \
-    && docker-php-ext-configure swoole --enable-openssl --enable-sockets --enable-http2 --enable-mysqlnd \
-    && docker-php-ext-install swoole \
-    && docker-php-ext-enable swoole \
-    && rm swoole-4.4.19.tgz \
     && docker-php-source delete
 
 # check
@@ -48,7 +40,7 @@ RUN set -ex \
     && php -v \
     # 检查已安装的模块
     && php -m \
-    && echo -e "PHP7.4-FPM Build Completed!"
+    && echo -e "PHP7.1-FPM Build Completed!"
 
 #COPY ./laravel.ini /usr/local/etc/php/conf.d
 
