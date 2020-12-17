@@ -16,7 +16,7 @@ COPY ext/igbinary-3.1.6.tgz /tmp/igbinary-3.1.6.tgz
 
 # php ext
 RUN set -ex \
-    && docker-php-ext-install gd pdo_mysql mysqli sockets pcntl imap bcmath \
+    && docker-php-ext-install gd pdo_mysql mysqli exif zip sockets pcntl imap bcmath \
     && cd /tmp \
     && docker-php-source extract \
     # redis
@@ -32,6 +32,18 @@ RUN set -ex \
     && docker-php-ext-enable igbinary \
     && rm igbinary-3.1.6.tgz \
     && docker-php-source delete
+
+RUN set -ex \ 
+    # 下载composer 
+    #&& wget https://mirrors.aliyun.com/composer/composer.phar \
+    # B2C的代码使用最新版本安装报错，所以下载1.9.0
+    && wget https://getcomposer.org/download/1.9.0/composer.phar \
+    && chmod u+x composer.phar \
+    && mv composer.phar /usr/local/bin/composer \
+    # 给 composer 设置aliyun镜像
+    && composer config -g repo.packagist composer https://mirrors.aliyun.com/composer \
+    # 把 composer 全局命令加入 PATH
+    && echo 'export PATH="$PATH:$HOME/.composer/vendor/bin"' >> ~/.bashrc
 
 # check
 RUN set -ex \
