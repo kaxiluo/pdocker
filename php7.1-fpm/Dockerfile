@@ -16,6 +16,7 @@ COPY ext/igbinary-3.1.6.tgz /tmp/igbinary-3.1.6.tgz
 
 # php ext
 RUN set -ex \
+    && pecl channel-update pecl.php.net \
     && docker-php-ext-install gd pdo_mysql mysqli exif zip sockets pcntl imap bcmath \
     && cd /tmp \
     && docker-php-source extract \
@@ -31,7 +32,10 @@ RUN set -ex \
     && docker-php-ext-install igbinary \
     && docker-php-ext-enable igbinary \
     && rm igbinary-3.1.6.tgz \
-    && docker-php-source delete
+    && docker-php-source delete \
+    # xdebug
+    && pecl install xdebug-2.9.8 \
+    && docker-php-ext-enable xdebug
 
 RUN set -ex \ 
     # 下载composer 
