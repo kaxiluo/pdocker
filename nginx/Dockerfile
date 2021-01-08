@@ -12,7 +12,7 @@ RUN set -ex \
 RUN rm -rf /var/cache/apk/* && \
     rm -rf /tmp/*
 
-COPY tengine-2.3.2.tar.gz /tmp/tengine.tar.gz
+COPY src/tengine-2.3.2.tar.gz /tmp/tengine.tar.gz
 
 ENV CONFIG "\
         --prefix=/etc/nginx \

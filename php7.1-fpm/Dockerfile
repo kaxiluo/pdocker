@@ -11,8 +11,8 @@ RUN set -ex \
     && apk update \
     && apk add --no-cache vim git autoconf openssl-dev build-base zlib-dev re2c libpng-dev oniguruma-dev imap-dev
 
-COPY ext/redis-5.3.2.tgz /tmp/redis-5.3.2.tgz
-COPY ext/igbinary-3.1.6.tgz /tmp/igbinary-3.1.6.tgz
+COPY src/redis-5.3.2.tgz /tmp/redis-5.3.2.tgz
+COPY src/igbinary-3.1.6.tgz /tmp/igbinary-3.1.6.tgz
 
 # php ext
 RUN set -ex \
@@ -24,13 +24,11 @@ RUN set -ex \
     && tar -zxvf redis-5.3.2.tgz \ 
     && mv redis-5.3.2 /usr/src/php/ext/redis \
     && docker-php-ext-install redis \
-    && docker-php-ext-enable redis \
     && rm redis-5.3.2.tgz \
     # igbinary
     && tar -zxvf igbinary-3.1.6.tgz \ 
     && mv igbinary-3.1.6 /usr/src/php/ext/igbinary \
     && docker-php-ext-install igbinary \
-    && docker-php-ext-enable igbinary \
     && rm igbinary-3.1.6.tgz \
     && docker-php-source delete \
     # xdebug
