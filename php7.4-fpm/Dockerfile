@@ -9,7 +9,8 @@ RUN set -ex \
     # 更新包列表
     && apk update \
     # 添加扩展
-    && apk add --no-cache vim git autoconf openssl-dev build-base zlib-dev re2c libpng-dev oniguruma-dev imap-dev libzip-dev
+    && apk add --no-cache vim git autoconf openssl-dev build-base zlib-dev re2c libpng-dev oniguruma-dev imap-dev libzip-dev libxslt-dev
+    
 
 COPY src/swoole-4.4.19.tgz /tmp/swoole-4.4.19.tgz
 COPY src/redis-5.3.2.tgz /tmp/redis-5.3.2.tgz
@@ -17,7 +18,7 @@ COPY src/igbinary-3.1.6.tgz /tmp/igbinary-3.1.6.tgz
 
 # php ext
 RUN set -ex \
-    && docker-php-ext-install gd pdo_mysql mysqli exif zip sockets pcntl imap bcmath \
+    && docker-php-ext-install gd pdo_mysql mysqli exif zip sockets pcntl imap bcmath xsl \
     && cd /tmp \
     && docker-php-source extract \
     # redis
