@@ -1,24 +1,48 @@
-FROM php:7.4.13-fpm-alpine3.12
+FROM php:7.4.14-fpm
 
-# apk 是 alpine 的一个包管理器
 RUN set -ex \
-    # 在临时目录进行这一切
     && cd /tmp \
-    # 把 apk 的默认源改为aliyun镜像
-    && sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories \
-    # 更新包列表
-    && apk update \
-    # 添加扩展
-    && apk add --no-cache vim git autoconf openssl-dev build-base zlib-dev re2c libpng-dev oniguruma-dev imap-dev libzip-dev libxslt-dev
-    
+    # 换源
+    && sed -i 's/deb.debian.org/mirrors.aliyun.com/' /etc/apt/sources.list \
+    && sed -i 's/security.debian.org/mirrors.aliyun.com/' /etc/apt/sources.list \
+    && sed -i 's/security-cdn.debian.org/mirrors.aliyun.com/' /etc/apt/sources.list
+
+ENV DEBIAN_FRONTEND noninteractive
+
+RUN set -xe \
+    && apt-get update -y \
+    && pecl channel-update pecl.php.net \
+    && apt-get install -y \
+      dialog whiptail \
+      apt-utils procps iputils-ping vim git wget curl zsh
+      
+RUN set -eux \
+    && apt-get install -y --no-install-recommends \
+            autoconf libzip-dev zip unzip \
+            libmemcached-dev libz-dev libpq-dev \
+            libjpeg-dev libpng-dev  libfreetype6-dev libwebp-dev \
+            libssl-dev libmcrypt-dev  libonig-dev \
+            libc-client-dev libkrb5-dev \
+            libxslt-dev \
+    && rm -rf /var/lib/apt/lists/*
 
 COPY src/swoole-4.4.19.tgz /tmp/swoole-4.4.19.tgz
 COPY src/redis-5.3.2.tgz /tmp/redis-5.3.2.tgz
 COPY src/igbinary-3.1.6.tgz /tmp/igbinary-3.1.6.tgz
+COPY src/ohmyzsh/install.sh /tmp/ohmyzsh/install.sh
 
 # php ext
 RUN set -ex \
-    && docker-php-ext-install gd pdo_mysql mysqli exif zip sockets pcntl imap bcmath xsl \
+    # pdo_mysql mysqli ....
+    && docker-php-ext-install pdo_mysql mysqli exif zip sockets pcntl bcmath xsl \
+    # gd
+    && docker-php-ext-configure gd --prefix=/usr --with-jpeg --with-webp --with-freetype \
+    && docker-php-ext-install gd \
+    && php -r 'var_dump(gd_info());' \
+    # imap
+    && docker-php-ext-configure imap --with-kerberos --with-imap-ssl \
+    && docker-php-ext-install imap \
+    # source extract
     && cd /tmp \
     && docker-php-source extract \
     # redis
@@ -50,6 +74,10 @@ RUN set -ex \
     && composer config -g repo.packagist composer https://mirrors.aliyun.com/composer \
     # 把 composer 全局命令加入 PATH
     && echo 'export PATH="$PATH:$HOME/.composer/vendor/bin"' >> ~/.bashrc
+
+# Oh My ZSH!
+RUN set -ex \
+    && sh -c /tmp/ohmyzsh/install.sh
 
 # check
 RUN set -ex \
