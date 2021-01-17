@@ -29,7 +29,6 @@ RUN set -eux \
 
 COPY src/redis-5.3.2.tgz /tmp/redis-5.3.2.tgz
 COPY src/igbinary-3.1.6.tgz /tmp/igbinary-3.1.6.tgz
-COPY src/ohmyzsh/install.sh /tmp/ohmyzsh/install.sh
 
 # php ext
 RUN set -ex \
@@ -73,14 +72,14 @@ RUN set -ex \
     
 # Oh My ZSH!
 RUN set -ex \
-    && sh -c /tmp/ohmyzsh/install.sh
+    && wget https://gitee.com/mirrors/oh-my-zsh/raw/master/tools/install.sh \
+    && sh install.sh \
+    && rm install.sh
 
 # check
 RUN set -ex \
     && cd /tmp \
-    # 检查 PHP 版本
     && php -v \
-    # 检查已安装的模块
     && php -m \
     && echo -e "PHP7.1-FPM Build Completed!"
 

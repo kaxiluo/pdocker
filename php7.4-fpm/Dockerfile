@@ -15,7 +15,7 @@ RUN set -xe \
     && apt-get install -y \
       dialog whiptail \
       apt-utils procps iputils-ping vim git wget curl zsh
-      
+
 RUN set -eux \
     && apt-get install -y --no-install-recommends \
             autoconf libzip-dev zip unzip \
@@ -29,7 +29,6 @@ RUN set -eux \
 COPY src/swoole-4.4.19.tgz /tmp/swoole-4.4.19.tgz
 COPY src/redis-5.3.2.tgz /tmp/redis-5.3.2.tgz
 COPY src/igbinary-3.1.6.tgz /tmp/igbinary-3.1.6.tgz
-COPY src/ohmyzsh/install.sh /tmp/ohmyzsh/install.sh
 
 # php ext
 RUN set -ex \
@@ -77,14 +76,14 @@ RUN set -ex \
 
 # Oh My ZSH!
 RUN set -ex \
-    && sh -c /tmp/ohmyzsh/install.sh
+    && wget https://gitee.com/mirrors/oh-my-zsh/raw/master/tools/install.sh \
+    && sh install.sh \
+    && rm install.sh
 
 # check
 RUN set -ex \
     && cd /tmp \
-    # 检查 PHP 版本
     && php -v \
-    # 检查已安装的模块
     && php -m \
     && echo -e "PHP7.4-FPM Build Completed!"
 
