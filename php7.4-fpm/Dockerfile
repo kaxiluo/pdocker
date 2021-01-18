@@ -82,7 +82,8 @@ RUN set -ex \
 RUN set -ex \
     && wget https://gitee.com/mirrors/oh-my-zsh/raw/master/tools/install.sh \
     && sh install.sh \
-    && rm install.sh
+    && rm install.sh \
+    && sed -i 's/^ZSH_THEME="robbyrussell"/ZSH_THEME="ys"/' ~/.zshrc
 
 # check
 RUN set -ex \
