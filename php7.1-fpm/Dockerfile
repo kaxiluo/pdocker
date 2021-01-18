@@ -24,7 +24,7 @@ RUN set -eux \
             libjpeg-dev libpng-dev  libfreetype6-dev libwebp-dev \
             libssl-dev libmcrypt-dev  libonig-dev \
             libc-client-dev libkrb5-dev \
-            libxslt-dev \
+            libxslt-dev librabbitmq-dev \
     && rm -rf /var/lib/apt/lists/*
 
 COPY src/redis-5.3.2.tgz /tmp/redis-5.3.2.tgz
@@ -54,9 +54,13 @@ RUN set -ex \
     && docker-php-ext-install igbinary \
     && rm igbinary-3.1.6.tgz \
     && docker-php-source delete \
+    ## install by pecl
     # xdebug
     && pecl install xdebug-2.9.8 \
-    && docker-php-ext-enable xdebug
+    && docker-php-ext-enable xdebug \
+    # amqp
+    && pecl install amqp \
+    && docker-php-ext-enable amqp  
 
 RUN set -ex \ 
     # 下载composer 

@@ -23,7 +23,7 @@ RUN set -eux \
             libjpeg-dev libpng-dev  libfreetype6-dev libwebp-dev \
             libssl-dev libmcrypt-dev  libonig-dev \
             libc-client-dev libkrb5-dev \
-            libxslt-dev \
+            libxslt-dev librabbitmq-dev \
     && rm -rf /var/lib/apt/lists/*
 
 COPY src/swoole-4.4.19.tgz /tmp/swoole-4.4.19.tgz
@@ -60,7 +60,11 @@ RUN set -ex \
     && docker-php-ext-configure swoole --enable-openssl --enable-sockets --enable-http2 --enable-mysqlnd \
     && docker-php-ext-install swoole \
     && rm swoole-4.4.19.tgz \
-    && docker-php-source delete
+    && docker-php-source delete \
+    ## install by pecl
+    # amqp
+    && pecl install amqp \
+    && docker-php-ext-enable amqp  
 
 RUN set -ex \
     # 下载composer 
