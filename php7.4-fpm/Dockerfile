@@ -64,7 +64,10 @@ RUN set -ex \
     ## install by pecl
     # amqp
     && pecl install amqp \
-    && docker-php-ext-enable amqp  
+    && docker-php-ext-enable amqp \
+    # mailparse
+    && pecl install mailparse \
+    && docker-php-ext-enable mailparse
 
 RUN set -ex \
     # 下载composer 
