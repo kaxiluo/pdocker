@@ -23,7 +23,13 @@ RUN set -eux \
             libjpeg-dev libpng-dev  libfreetype6-dev libwebp-dev \
             libssl-dev libmcrypt-dev  libonig-dev \
             libc-client-dev libkrb5-dev \
-            libxslt-dev librabbitmq-dev \
+            libxslt-dev librabbitmq-dev
+
+RUN if [ ${INSTALL_WKHTMLTOPDF} = true ]; then \
+    && apt-get install -y -f wkhtmltopdf \
+;fi
+
+RUN set -ex \ 
     && rm -rf /var/lib/apt/lists/*
 
 COPY src/swoole-4.4.19.tgz /tmp/swoole-4.4.19.tgz

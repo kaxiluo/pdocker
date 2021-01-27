@@ -13,6 +13,8 @@ services:
         tty: true
         expose:
         - "9000"
+        ports:
+        - "${Industrious_API_PORT}:${Industrious_API_CONTAINER_PORT}"
         networks:
         - base-bridge  
     php7.1-fpm:
@@ -48,4 +50,18 @@ services:
         depends_on:
         - php7.1-fpm
         - php7.4-fpm 
+    rabbitmq:
+        build: ./rabbitmq
+        ports:
+          - "${RABBITMQ_NODE_HOST_PORT}:5672"
+          - "${RABBITMQ_MANAGEMENT_HTTP_HOST_PORT}:15672"
+          - "${RABBITMQ_MANAGEMENT_HTTPS_HOST_PORT}:15671"
+        privileged: true
+        environment:
+          - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
+          - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
+        volumes:
+          - ${DATA_PATH_HOST}/rabbitmq:/var/lib/rabbitmq
+        networks:
+        - base-bridge
 

@@ -13,3 +13,18 @@ REDIS_PORT=6379
 NGINX_HOST_LOG_PATH=./logs/nginx/
 NGINX_SITES_PATH=./nginx/sites/
 NGINX_SSL_PATH=./nginx/ssl/
+
+### RabbitMQ ########################################
+
+RABBITMQ_NODE_HOST_PORT=5672
+RABBITMQ_MANAGEMENT_HTTP_HOST_PORT=15672
+RABBITMQ_MANAGEMENT_HTTPS_HOST_PORT=15671
+RABBITMQ_DEFAULT_USER=guest
+RABBITMQ_DEFAULT_PASS=guest
+
+### PHP7.4-fpm ########################################
+
+INSTALL_WKHTMLTOPDF=false
+
+Industrious_API_PORT=8080
+Industrious_API_CONTAINER_PORT=8080
