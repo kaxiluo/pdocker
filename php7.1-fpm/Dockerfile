@@ -24,11 +24,18 @@ RUN set -eux \
             libjpeg-dev libpng-dev  libfreetype6-dev libwebp-dev \
             libssl-dev libmcrypt-dev  libonig-dev \
             libc-client-dev libkrb5-dev \
-            libxslt-dev librabbitmq-dev \
+            libxslt-dev librabbitmq-dev
+
+# wkhtmltopdf
+ARG INSTALL_WKHTMLTOPDF=false
+RUN if [ ${INSTALL_WKHTMLTOPDF} = true ]; then \
+    apt-get install -y -f wkhtmltopdf \
+;fi
+
+RUN set -ex \ 
     && rm -rf /var/lib/apt/lists/*
 
-COPY src/redis-5.3.2.tgz /tmp/redis-5.3.2.tgz
-COPY src/igbinary-3.1.6.tgz /tmp/igbinary-3.1.6.tgz
+COPY src/* /tmp/
 
 # php ext
 RUN set -ex \
@@ -53,25 +60,48 @@ RUN set -ex \
     && mv igbinary-3.1.6 /usr/src/php/ext/igbinary \
     && docker-php-ext-install igbinary \
     && rm igbinary-3.1.6.tgz \
-    && docker-php-source delete \
-    ## install by pecl
+    # swoole
+    && tar -zxvf swoole-4.4.19.tgz \
+    && mv swoole-4.4.19 /usr/src/php/ext/swoole \
+    && docker-php-ext-configure swoole --enable-openssl --enable-sockets --enable-http2 --enable-mysqlnd \
+    && docker-php-ext-install swoole \
+    && rm swoole-4.4.19.tgz \
     # xdebug
-    && pecl install xdebug-2.9.8 \
-    && docker-php-ext-enable xdebug \
+    && wget -O xdebug-2.9.8.tar.gz https://github.com/xdebug/xdebug/archive/2.9.8.tar.gz \
+    && tar -zxvf xdebug-2.9.8.tar.gz \
+    && mv xdebug-2.9.8 /usr/src/php/ext/xdebug \
+    && docker-php-ext-install xdebug \
+    && rm xdebug-2.9.8.tar.gz \
+    # amqp  
+    && tar -zxvf amqp-1.10.2.tgz \
+    && mv amqp-1.10.2 /usr/src/php/ext/amqp \
+    && docker-php-ext-install amqp \
+    && rm amqp-1.10.2.tgz \
+    # mailparse  
+    && tar -zxvf mailparse-3.1.1.tgz \
+    && mv mailparse-3.1.1 /usr/src/php/ext/mailparse \
+    && docker-php-ext-install mailparse \
+    && rm mailparse-3.1.1.tgz \
+    # source delete
+    && docker-php-source delete
+    ## install by pecl
+    #&& pecl install xdebug-2.9.8 \
+    #&& docker-php-ext-enable xdebug \
     # amqp
-    && pecl install amqp \
-    && docker-php-ext-enable amqp  
+    #&& pecl install amqp \
+    #&& docker-php-ext-enable amqp \
+    # mailparse
+    #&& pecl install mailparse \
+    #&& docker-php-ext-enable mailparse
 
-RUN set -ex \ 
-    # 下载composer 
+# Composer
+RUN set -ex \
     #&& wget https://mirrors.aliyun.com/composer/composer.phar \
-    # B2C的代码使用最新版本安装报错，所以下载1.9.0
-    && wget https://getcomposer.org/download/1.9.0/composer.phar \
-    && chmod u+x composer.phar \
-    && mv composer.phar /usr/local/bin/composer \
-    # 给 composer 设置aliyun镜像
+    # b2c code can work for 1.9.0
+    #&& wget https://getcomposer.org/download/1.9.0/composer.phar \
+    && mv composer-1.9.0.phar /usr/local/bin/composer \
+    && chmod u+x /usr/local/bin/composer \
     && composer config -g repo.packagist composer https://mirrors.aliyun.com/composer \
-    # 把 composer 全局命令加入 PATH
     && echo 'export PATH="$PATH:$HOME/.composer/vendor/bin"' >> ~/.bashrc
     
 # Oh My ZSH!
@@ -83,6 +113,7 @@ RUN set -ex \
 
 # check
 RUN set -ex \
+    && rm -rf /tmp/* \
     && cd /tmp \
     && php -v \
     && php -m \

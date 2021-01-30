@@ -1,8 +1,8 @@
 ###################### General Setup ######################
-APP_CODE_PATH_HOST=F:/workspace
+APP_CODE_PATH_HOST=E:/workspace
 APP_CODE_PATH_CONTAINER=/var/www
 
-DATA_PATH_HOST=F:/dockdata
+DATA_PATH_HOST=D:/SData/dockdata
 
 ### REDIS #################################################
 
@@ -26,5 +26,9 @@ RABBITMQ_DEFAULT_PASS=guest
 
 INSTALL_WKHTMLTOPDF=false
 
-Industrious_API_PORT=8080
-Industrious_API_CONTAINER_PORT=8080
+industrious_API_PORT=8080
+industrious_API_CONTAINER_PORT=8080
+
+### PHP7.1-fpm ########################################
+
+INSTALL_WKHTMLTOPDF=false
