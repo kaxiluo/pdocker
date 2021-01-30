@@ -28,7 +28,7 @@ RUN set -eux \
 # wkhtmltopdf
 ARG INSTALL_WKHTMLTOPDF=false
 RUN if [ ${INSTALL_WKHTMLTOPDF} = true ]; then \
-    && apt-get install -y -f wkhtmltopdf \
+    apt-get install -y -f wkhtmltopdf \
 ;fi
 
 RUN set -ex \ 
@@ -81,6 +81,7 @@ RUN set -ex \
 
 # Composer
 RUN set -ex \
+    && cd /tmp \
     #&& wget https://mirrors.aliyun.com/composer/composer.phar \
     # b2c code can work for 1.9.0
     #&& wget https://getcomposer.org/download/1.9.0/composer.phar \
