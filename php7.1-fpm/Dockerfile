@@ -61,11 +61,11 @@ RUN set -ex \
     && docker-php-ext-install igbinary \
     && rm igbinary-3.1.6.tgz \
     # swoole
-    && tar -zxvf swoole-4.4.19.tgz \
-    && mv swoole-4.4.19 /usr/src/php/ext/swoole \
+    && tar -zxvf swoole-4.3.6.tgz \
+    && mv swoole-4.3.6 /usr/src/php/ext/swoole \
     && docker-php-ext-configure swoole --enable-openssl --enable-sockets --enable-http2 --enable-mysqlnd \
     && docker-php-ext-install swoole \
-    && rm swoole-4.4.19.tgz \
+    && rm swoole-4.3.6.tgz \
     # xdebug
     && wget -O xdebug-2.9.8.tar.gz https://github.com/xdebug/xdebug/archive/2.9.8.tar.gz \
     && tar -zxvf xdebug-2.9.8.tar.gz \
