@@ -3,6 +3,7 @@ FROM rabbitmq:3.8-alpine
 RUN set -ex \
     && sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
 
+# Clean up
 RUN rm -rf /var/cache/apk/* && \
     rm -rf /tmp/*
 

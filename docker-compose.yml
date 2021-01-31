@@ -66,4 +66,46 @@ services:
           - ${DATA_PATH_HOST}/rabbitmq:/var/lib/rabbitmq/mnesia
         networks:
         - base-bridge
+        
+### ElasticSearch ########################################
+    elasticsearch:
+      build:
+        context: ./elasticsearch
+        args:
+          - ELK_VERSION=${ELK_VERSION}
+      volumes:
+        - ${DATA_PATH_HOST}/elasticsearch:/usr/share/elasticsearch/data
+      environment:
+        - cluster.name=pdocker-cluster
+        - node.name=pdocker-node
+        - bootstrap.memory_lock=true
+        - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+        - cluster.initial_master_nodes=pdocker-node
+      ulimits:
+        memlock:
+          soft: -1
+          hard: -1
+        nofile:
+          soft: 65536
+          hard: 65536
+      ports:
+        - "${ELASTICSEARCH_HOST_HTTP_PORT}:9200"
+        - "${ELASTICSEARCH_HOST_TRANSPORT_PORT}:9300"
+      networks:
+        - base-bridge
 
+### Logstash ##############################################
+    #logstash
+
+### Kibana ##############################################
+    kibana:
+      build:
+        context: ./kibana
+        args:
+          - ELK_VERSION=${ELK_VERSION}
+      ports:
+        - "${KIBANA_HTTP_PORT}:5601"
+      depends_on:
+        - elasticsearch
+      networks:
+        - base-bridge

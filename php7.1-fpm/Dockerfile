@@ -32,9 +32,6 @@ RUN if [ ${INSTALL_WKHTMLTOPDF} = true ]; then \
     apt-get install -y -f wkhtmltopdf \
 ;fi
 
-RUN set -ex \ 
-    && rm -rf /var/lib/apt/lists/*
-
 COPY src/* /tmp/
 
 # php ext
@@ -112,15 +109,19 @@ RUN set -ex \
     && rm install.sh \
     && sed -i 's/^ZSH_THEME="robbyrussell"/ZSH_THEME="ys"/' ~/.zshrc
 
-# check
+#COPY ./laravel.ini /usr/local/etc/php/conf.d
+
+# Check
 RUN set -ex \
-    && rm -rf /tmp/* \
     && cd /tmp \
     && php -v \
     && php -m \
     && echo -e "PHP7.1-FPM Build Completed!"
 
-#COPY ./laravel.ini /usr/local/etc/php/conf.d
+# Clean up
+RUN apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
+    rm /var/log/lastlog /var/log/faillog
 
 WORKDIR /var/www
 

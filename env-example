@@ -26,9 +26,21 @@ RABBITMQ_DEFAULT_PASS=guest
 
 INSTALL_WKHTMLTOPDF=false
 
+### PHP7.1-fpm ########################################
+
+INSTALL_WKHTMLTOPDF=true
+
 industrious_API_PORT=8080
 industrious_API_CONTAINER_PORT=8080
 
-### PHP7.1-fpm ########################################
+### ELASTICSEARCH #########################################
 
-INSTALL_WKHTMLTOPDF=false
+ELASTICSEARCH_HOST_HTTP_PORT=9200
+ELASTICSEARCH_HOST_TRANSPORT_PORT=9300
+
+### KIBANA ################################################
+
+KIBANA_HTTP_PORT=5601
+
+### ELK Stack ##################################################
+ELK_VERSION=7.9.1
