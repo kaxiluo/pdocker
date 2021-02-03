@@ -1,16 +1,14 @@
 FROM alpine:3.12
 
-
-ENV TENGINE_VERSION 2.3.2
-
 # nginx: https://git.io/vSIyj
 
 RUN set -ex \
-    # 把 apk 的默认源改为aliyun镜像
     && sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
 
-RUN rm -rf /var/cache/apk/* && \
-    rm -rf /tmp/*
+ENV TENGINE_VERSION 2.3.2
+ENV TZ=PRC
+
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 COPY src/tengine-2.3.2.tar.gz /tmp/tengine.tar.gz
 
@@ -142,6 +140,9 @@ RUN     addgroup -S nginx \
         && ln -sf /dev/stderr /var/log/nginx/error.log
 
 COPY nginx.conf /etc/nginx/nginx.conf
+
+RUN rm -rf /var/cache/apk/* && \
+    rm -rf /tmp/*
 
 EXPOSE 80 443
 

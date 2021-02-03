@@ -8,6 +8,9 @@ RUN set -ex \
     && sed -i 's/security-cdn.debian.org/mirrors.aliyun.com/' /etc/apt/sources.list
 
 ENV DEBIAN_FRONTEND noninteractive
+ENV TZ=PRC
+
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 RUN set -xe \
     && apt-get update -y \

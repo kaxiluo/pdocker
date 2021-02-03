@@ -9,6 +9,9 @@ RUN set -ex \
     # && apk add --no-cache vim git autoconf openssl-dev build-base zlib-dev re2c libpng-dev oniguruma-dev imap-dev libzip-dev libxslt-dev
 
 ENV DEBIAN_FRONTEND noninteractive
+ENV TZ=PRC
+
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 RUN set -xe \
     && apt-get update -y \
