@@ -8,11 +8,14 @@ services:
 ### PHP-FPM ########################################  
     php7.1-fpm:
         build:
-          context: ./php7.1-fpm
+          context: ./php-fpm
           args:
+            - X_PHP_VERSION=7.1
+            - INSTALL_XDEBUG=${PHP71_FPM_INSTALL_XDEBUG}
+            - INSTALL_SWOOLE=${PHP71_FPM_INSTALL_SWOOLE}
             - INSTALL_WKHTMLTOPDF=${PHP71_FPM_INSTALL_WKHTMLTOPDF}
         volumes:
-        - ./php7.1-fpm/php.ini:/usr/local/etc/php/php.ini
+        - ./php-fpm/php${X_PHP_VERSION}.ini:/usr/local/etc/php/php.ini
         - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
         tty: true
         ports:
@@ -23,11 +26,14 @@ services:
         - base-bridge  
     php7.3-fpm:
         build:
-          context: ./php7.3-fpm
+          context: ./php-fpm
           args:
+            - X_PHP_VERSION=7.3
+            - INSTALL_XDEBUG=${PHP73_FPM_INSTALL_XDEBUG}
+            - INSTALL_SWOOLE=${PHP73_FPM_INSTALL_SWOOLE}
             - INSTALL_WKHTMLTOPDF=${PHP73_FPM_INSTALL_WKHTMLTOPDF}
         volumes:
-        - ./php7.3-fpm/php.ini:/usr/local/etc/php/php.ini
+        - ./php-fpm/php${X_PHP_VERSION}.ini:/usr/local/etc/php/php.ini
         - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
         tty: true
         expose:
@@ -36,17 +42,21 @@ services:
         - base-bridge 
     php7.4-fpm:
         build:
-          context: ./php7.4-fpm
+          context: ./php-fpm
           args:
+            - X_PHP_VERSION=7.4
+            - INSTALL_XDEBUG=${PHP74_FPM_INSTALL_XDEBUG}
+            - INSTALL_SWOOLE=${PHP74_FPM_INSTALL_SWOOLE}
             - INSTALL_WKHTMLTOPDF=${PHP74_FPM_INSTALL_WKHTMLTOPDF}
         volumes:
-        - ./php7.4-fpm/php.ini:/usr/local/etc/php/php.ini
+        - ./php-fpm/php${X_PHP_VERSION}.ini:/usr/local/etc/php/php.ini
         - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
         tty: true
         expose:
         - "9000"
         networks:
         - base-bridge     
+
 ### Redis ########################################            
     redis:
         build: ./redis

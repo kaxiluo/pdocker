@@ -24,6 +24,8 @@ RABBITMQ_DEFAULT_PASS=guest
 
 ### PHP7.1-fpm ########################################
 
+PHP71_FPM_INSTALL_XDEBUG=true
+PHP71_FPM_INSTALL_SWOOLE=true
 PHP71_FPM_INSTALL_WKHTMLTOPDF=true
 
 industrious_API_PORT=8080
@@ -31,10 +33,14 @@ industrious_API_CONTAINER_PORT=8080
 
 ### PHP7.3-fpm ########################################
 
+PHP73_FPM_INSTALL_XDEBUG=false
+PHP73_FPM_INSTALL_SWOOLE=true
 PHP73_FPM_INSTALL_WKHTMLTOPDF=false
 
 ### PHP7.4-fpm ########################################
 
+PHP74_FPM_INSTALL_XDEBUG=false
+PHP74_FPM_INSTALL_SWOOLE=true
 PHP74_FPM_INSTALL_WKHTMLTOPDF=false
 
 ### ELASTICSEARCH #########################################
