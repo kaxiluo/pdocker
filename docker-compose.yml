@@ -5,20 +5,12 @@ networks:
       driver: bridge
 
 services: 
-    php7.4-fpm:
-        build: ./php7.4-fpm
-        volumes:
-        - ./php7.4-fpm/php.ini:/usr/local/etc/php/php.ini
-        - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
-        tty: true
-        expose:
-        - "9000"
-        #ports:
-        #- "${industrious_API_PORT}:${industrious_API_CONTAINER_PORT}"
-        networks:
-        - base-bridge  
+### PHP-FPM ########################################  
     php7.1-fpm:
-        build: ./php7.1-fpm
+        build:
+          context: ./php7.1-fpm
+          args:
+            - INSTALL_WKHTMLTOPDF=${PHP71_FPM_INSTALL_WKHTMLTOPDF}
         volumes:
         - ./php7.1-fpm/php.ini:/usr/local/etc/php/php.ini
         - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
@@ -29,6 +21,33 @@ services:
         - "9000"
         networks:
         - base-bridge  
+    php7.3-fpm:
+        build:
+          context: ./php7.3-fpm
+          args:
+            - INSTALL_WKHTMLTOPDF=${PHP73_FPM_INSTALL_WKHTMLTOPDF}
+        volumes:
+        - ./php7.3-fpm/php.ini:/usr/local/etc/php/php.ini
+        - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
+        tty: true
+        expose:
+        - "9000"
+        networks:
+        - base-bridge 
+    php7.4-fpm:
+        build:
+          context: ./php7.4-fpm
+          args:
+            - INSTALL_WKHTMLTOPDF=${PHP74_FPM_INSTALL_WKHTMLTOPDF}
+        volumes:
+        - ./php7.4-fpm/php.ini:/usr/local/etc/php/php.ini
+        - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
+        tty: true
+        expose:
+        - "9000"
+        networks:
+        - base-bridge     
+### Redis ########################################            
     redis:
         build: ./redis
         volumes:
@@ -36,7 +55,9 @@ services:
         ports:
         - "${REDIS_PORT}:6379"
         networks:
-        - base-bridge   
+        - base-bridge  
+
+### Nginx(tengine) ########################################         
     nginx:  
         build: ./nginx
         volumes:
@@ -52,6 +73,8 @@ services:
         depends_on:
         - php7.1-fpm
         - php7.4-fpm 
+
+### Rabbitmq ########################################          
     rabbitmq:
         build: ./rabbitmq
         ports:
