@@ -82,7 +82,7 @@ services:
         - base-bridge
         depends_on:
         - php7.1-fpm
-        - php7.4-fpm 
+        - php7.3-fpm 
 
 ### Rabbitmq ########################################          
     rabbitmq:
