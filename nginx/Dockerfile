@@ -144,7 +144,7 @@ COPY nginx.conf /etc/nginx/nginx.conf
 RUN rm -rf /var/cache/apk/* && \
     rm -rf /tmp/*
 
-EXPOSE 80 443
+EXPOSE 80 443 8443
 
 STOPSIGNAL SIGTERM
 
