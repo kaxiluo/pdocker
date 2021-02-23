@@ -15,7 +15,7 @@ services:
             - INSTALL_SWOOLE=${PHP71_FPM_INSTALL_SWOOLE}
             - INSTALL_WKHTMLTOPDF=${PHP71_FPM_INSTALL_WKHTMLTOPDF}
         volumes:
-        - ./php-fpm/php${X_PHP_VERSION}.ini:/usr/local/etc/php/php.ini
+        - ./php-fpm/php7.1.ini:/usr/local/etc/php/php.ini
         - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
         tty: true
         ports:
@@ -33,7 +33,7 @@ services:
             - INSTALL_SWOOLE=${PHP73_FPM_INSTALL_SWOOLE}
             - INSTALL_WKHTMLTOPDF=${PHP73_FPM_INSTALL_WKHTMLTOPDF}
         volumes:
-        - ./php-fpm/php${X_PHP_VERSION}.ini:/usr/local/etc/php/php.ini
+        - ./php-fpm/php7.3.ini:/usr/local/etc/php/php.ini
         - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
         tty: true
         expose:
@@ -49,7 +49,7 @@ services:
             - INSTALL_SWOOLE=${PHP74_FPM_INSTALL_SWOOLE}
             - INSTALL_WKHTMLTOPDF=${PHP74_FPM_INSTALL_WKHTMLTOPDF}
         volumes:
-        - ./php-fpm/php${X_PHP_VERSION}.ini:/usr/local/etc/php/php.ini
+        - ./php-fpm/php7.4.ini:/usr/local/etc/php/php.ini
         - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
         tty: true
         expose:
