@@ -85,8 +85,8 @@ RUN if [ ${INSTALL_SWOOLE} = true ]; then \
         tar -zxvf swoole-4.3.6.tgz && \
         mv swoole-4.3.6 /usr/src/php/ext/swoole \
     ;else \
-        tar -zxvf swoole-4.4.19.tgz && \
-        mv swoole-4.4.19 /usr/src/php/ext/swoole \
+        tar -zxvf swoole-4.6.3.tgz && \
+        mv swoole-4.6.3 /usr/src/php/ext/swoole \
     ;fi \
     && docker-php-ext-configure swoole --enable-openssl --enable-sockets --enable-http2 --enable-mysqlnd \
     && docker-php-ext-install swoole \
