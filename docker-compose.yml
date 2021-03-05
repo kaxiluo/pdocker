@@ -145,3 +145,12 @@ services:
         - elasticsearch
       networks:
         - base-bridge
+
+### Consul ##############################################
+    consul:
+        build:
+          context: ./consul
+        ports: 
+          - "8500:8500"
+        networks:
+          - base-bridge   

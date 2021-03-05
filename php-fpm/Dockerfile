@@ -19,7 +19,8 @@ RUN set -xe \
     && pecl channel-update pecl.php.net \
     && apt-get install -y \
       dialog whiptail \
-      apt-utils procps iputils-ping vim git wget curl zsh
+      apt-utils telnet net-tools procps iputils-ping \
+      vim git wget curl zsh
 
 RUN set -eux \
     && apt-get install -y --no-install-recommends \
