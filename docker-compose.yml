@@ -57,7 +57,27 @@ services:
         expose:
         - "9000"
         networks:
-        - base-bridge     
+        - base-bridge
+        extra_hosts:
+          pd.local: ${HOSTIP}
+
+### PHP-CLI ########################################  
+    php7.1-cli:
+        build:
+          context: ./php-cli
+          args:
+            - X_PHP_VERSION=7.1
+            - INSTALL_XDEBUG=${PHP71_CLI_INSTALL_XDEBUG}
+            - INSTALL_SWOOLE=${PHP71_CLI_INSTALL_SWOOLE}
+            - INSTALL_WKHTMLTOPDF=${PHP71_CLI_INSTALL_WKHTMLTOPDF}
+        volumes:
+        - ./php-cli/php7.1.ini:/usr/local/etc/php/php.ini
+        - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
+        tty: true
+        ports:
+        - "${cqgg_jobs_API_PORT}:${cqgg_jobs_API_CONTAINER_PORT}"
+        networks:
+        - base-bridge
 
 ### Redis ########################################            
     redis:

@@ -55,7 +55,7 @@ RUN if [ ${INSTALL_WKHTMLTOPDF} = true ]; then \
 RUN set -ex \
     && cd /tmp \
     # pdo_mysql mysqli ......
-    && docker-php-ext-install pdo_mysql mysqli exif zip sockets pcntl bcmath xsl \
+    && docker-php-ext-install pdo_mysql mysqli exif zip sockets pcntl bcmath xsl gd \
     # imap
     && docker-php-ext-configure imap --with-kerberos --with-imap-ssl \
     && docker-php-ext-install imap \
@@ -95,14 +95,14 @@ RUN if [ ${INSTALL_SWOOLE} = true ]; then \
 
 ## xdebug
 ARG INSTALL_XDEBUG=false
-RUN if [ ${INSTALL_XDEBUG} = true ]; then \
+RUN if [ ${INSTALL_XDEBUG} = true ]; then \ 
+    cd /tmp \
     #pecl install xdebug-2.9.8 \
     #docker-php-ext-enable xdebug \
-    wget -O xdebug-2.9.8.tar.gz https://github.com/xdebug/xdebug/archive/2.9.8.tar.gz \
-    && tar -zxvf xdebug-2.9.8.tar.gz \
+    #wget -O xdebug-2.9.8.tar.gz https://github.com/xdebug/xdebug/archive/2.9.8.tar.gz \
+    && tar -zxvf xdebug-2.9.8.tgz \
     && mv xdebug-2.9.8 /usr/src/php/ext/xdebug \
     && docker-php-ext-install xdebug \
-    && rm xdebug-2.9.8.tar.gz \
 ;fi
 
 # Composer
@@ -118,9 +118,12 @@ RUN set -ex \
 
 # Oh My ZSH!
 RUN set -ex \
-    && wget https://gitee.com/mirrors/oh-my-zsh/raw/master/tools/install.sh \
-    && sh install.sh \
-    && rm install.sh \
+    #&& wget https://gitee.com/mirrors/oh-my-zsh/raw/master/tools/install.sh \
+    #&& sh install.sh \
+    #&& rm install.sh \
+    && cd /tmp \
+    && sh oh-my-zsh-install.sh \
+    && rm oh-my-zsh-install.sh \
     && sed -i 's/^ZSH_THEME="robbyrussell"/ZSH_THEME="ys"/' ~/.zshrc
 
 #COPY ./laravel.ini /usr/local/etc/php/conf.d
