@@ -80,15 +80,11 @@ RUN set -ex \
 
 ## swoole
 ARG INSTALL_SWOOLE=false
+ARG SWOOLE_VERSION=4.6.3
 RUN if [ ${INSTALL_SWOOLE} = true ]; then \
     cd /tmp && \
-    if [ ${X_PHP_VERSION} = "7.1" ] || [ ${X_PHP_VERSION} = "7.2" ]; then \
-        tar -zxvf swoole-4.3.6.tgz && \
-        mv swoole-4.3.6 /usr/src/php/ext/swoole \
-    ;else \
-        tar -zxvf swoole-4.6.3.tgz && \
-        mv swoole-4.6.3 /usr/src/php/ext/swoole \
-    ;fi \
+    tar -zxvf swoole-${SWOOLE_VERSION}.tgz && \
+    mv swoole-${SWOOLE_VERSION} /usr/src/php/ext/swoole \
     && docker-php-ext-configure swoole --enable-openssl --enable-sockets --enable-http2 --enable-mysqlnd \
     && docker-php-ext-install swoole \
 ;fi
@@ -117,14 +113,17 @@ RUN set -ex \
     && echo 'export PATH="$PATH:$HOME/.composer/vendor/bin"' >> ~/.bashrc
 
 # Oh My ZSH!
-RUN set -ex \
+ARG INSTALL_ZSH=false
+RUN if [ ${INSTALL_ZSH} = true ]; then \ 
+    set -ex \
     #&& wget https://gitee.com/mirrors/oh-my-zsh/raw/master/tools/install.sh \
     #&& sh install.sh \
     #&& rm install.sh \
     && cd /tmp \
     && sh oh-my-zsh-install.sh \
     && rm oh-my-zsh-install.sh \
-    && sed -i 's/^ZSH_THEME="robbyrussell"/ZSH_THEME="ys"/' ~/.zshrc
+    && sed -i 's/^ZSH_THEME="robbyrussell"/ZSH_THEME="ys"/' ~/.zshrc \
+;fi
 
 #COPY ./laravel.ini /usr/local/etc/php/conf.d
 
