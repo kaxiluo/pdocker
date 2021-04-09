@@ -36,6 +36,7 @@ industrious_API_CONTAINER_PORT=8082
 
 ### PHP7.3-fpm ########################################
 
+PHP73_FPM_LOG_PATH=./logs/php7.3-fpm/
 PHP73_FPM_INSTALL_XDEBUG=false
 PHP73_FPM_INSTALL_SWOOLE=true
 PHP73_FPM_INSTALL_WKHTMLTOPDF=true

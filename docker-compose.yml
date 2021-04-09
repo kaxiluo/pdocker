@@ -38,12 +38,16 @@ services:
             - INSTALL_ZSH=${PHP73_FPM_INSTALL_ZSH}
         volumes:
         - ./php-fpm/php7.3.ini:/usr/local/etc/php/php.ini
+        - ./php-fpm/php7.3-fpm.conf:/usr/local/etc/php-fpm.d/php7.3-fpm.conf
         - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
+        - ${PHP73_FPM_LOG_PATH}:/var/log/php7.3-fpm
         tty: true
         expose:
         - "9000"
         networks:
         - base-bridge 
+        cap_add:
+        - SYS_PTRACE
     php7.4-fpm:
         build:
           context: ./php-fpm
