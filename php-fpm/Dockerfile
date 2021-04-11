@@ -76,7 +76,11 @@ RUN set -ex \
     # mailparse  
     && tar -zxvf mailparse-3.1.1.tgz \
     && mv mailparse-3.1.1 /usr/src/php/ext/mailparse \
-    && docker-php-ext-install mailparse
+    && docker-php-ext-install mailparse \
+    # mongodb  
+    && tar -zxvf mongodb-1.9.1.tgz \
+    && mv mongodb-1.9.1 /usr/src/php/ext/mongodb \
+    && docker-php-ext-install mongodb
 
 ## swoole
 ARG INSTALL_SWOOLE=false
@@ -99,6 +103,28 @@ RUN if [ ${INSTALL_XDEBUG} = true ]; then \
     && tar -zxvf xdebug-2.9.8.tgz \
     && mv xdebug-2.9.8 /usr/src/php/ext/xdebug \
     && docker-php-ext-install xdebug \
+;fi
+
+## xhprof
+ARG INSTALL_XHPROF=false
+RUN if [ ${INSTALL_XHPROF} = true ]; then \
+    cd /tmp \
+    # curl -L -o /tmp/xhprof.tar.gz "https://github.com/tideways/php-xhprof-extension/archive/v5.0.1.tar.gz"; \
+    && mkdir -p xhprof \
+    && tar -C xhprof -zxvf /tmp/php-xhprof-extension-5.0.4.tar.gz --strip 1 \
+    && ( \
+        cd xhprof \
+        && phpize \
+        && ./configure \
+        && make \
+        && make install \
+    ) \
+;fi
+
+COPY ./xhprof.ini /usr/local/etc/php/conf.d
+
+RUN if [ ${INSTALL_XHPROF} = false ]; then \
+    rm /usr/local/etc/php/conf.d/xhprof.ini \
 ;fi
 
 # Composer

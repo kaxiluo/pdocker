@@ -34,6 +34,7 @@ services:
             - INSTALL_XDEBUG=${PHP73_FPM_INSTALL_XDEBUG}
             - INSTALL_SWOOLE=${PHP73_FPM_INSTALL_SWOOLE}
             - SWOOLE_VERSION=4.6.3
+            - INSTALL_XHPROF=${PHP73_FPM_INSTALL_XHPROF}
             - INSTALL_WKHTMLTOPDF=${PHP73_FPM_INSTALL_WKHTMLTOPDF}
             - INSTALL_ZSH=${PHP73_FPM_INSTALL_ZSH}
         volumes:
@@ -186,3 +187,14 @@ services:
           - "8500:8500"
         networks:
           - base-bridge   
+
+### MongoDB ##############################################
+    mongo:
+      build: ./mongo
+      ports:
+        - "${MONGODB_PORT}:27017"
+      volumes:
+        - ${DATA_PATH_HOST}/mongo:/data/db
+        - ${DATA_PATH_HOST}/mongo_config:/data/configdb
+      networks:
+        - base-bridge         
