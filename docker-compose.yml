@@ -20,8 +20,6 @@ services:
         - ./php-fpm/php7.1.ini:/usr/local/etc/php/php.ini
         - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
         tty: true
-        ports:
-        - "${industrious_API_PORT}:${industrious_API_CONTAINER_PORT}"
         expose:
         - "9000"
         networks:
@@ -91,6 +89,25 @@ services:
         - "${cqgg_jobs_API_PORT}:${cqgg_jobs_API_CONTAINER_PORT}"
         networks:
         - base-bridge
+
+    php7.4-cli:
+          build:
+            context: ./php-cli
+            args:
+              - X_PHP_VERSION=7.4
+              - INSTALL_XDEBUG=${PHP74_CLI_INSTALL_XDEBUG}
+              - INSTALL_SWOOLE=${PHP74_CLI_INSTALL_SWOOLE}
+              - SWOOLE_VERSION=4.6.3
+              - INSTALL_WKHTMLTOPDF=${PHP74_CLI_INSTALL_WKHTMLTOPDF}
+              - INSTALL_ZSH=${PHP74_CLI_INSTALL_ZSH}
+          volumes:
+          - ./php-cli/php7.4.ini:/usr/local/etc/php/php.ini
+          - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
+          tty: true
+          ports:
+          - "${industrious_API_PORT}:${industrious_API_CONTAINER_PORT}"
+          networks:
+          - base-bridge        
 
 ### Redis ########################################            
     redis:

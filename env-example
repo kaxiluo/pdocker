@@ -27,12 +27,9 @@ RABBITMQ_DEFAULT_PASS=123456
 ### PHP7.1-fpm ########################################
 
 PHP71_FPM_INSTALL_XDEBUG=true
-PHP71_FPM_INSTALL_SWOOLE=true ##4.x.x
+PHP71_FPM_INSTALL_SWOOLE=false ##4.x.x
 PHP71_FPM_INSTALL_WKHTMLTOPDF=true
 PHP71_FPM_INSTALL_ZSH=false
-
-industrious_API_PORT=8082
-industrious_API_CONTAINER_PORT=8082
 
 ### PHP7.3-fpm ########################################
 
@@ -62,6 +59,16 @@ PHP71_CLI_INSTALL_ZSH=false
 
 cqgg_jobs_API_PORT=9991
 cqgg_jobs_API_CONTAINER_PORT=9991
+
+### PHP7.4-CLI ########################################
+
+PHP74_CLI_INSTALL_XDEBUG=false
+PHP74_CLI_INSTALL_SWOOLE=true
+PHP74_CLI_INSTALL_WKHTMLTOPDF=true
+PHP74_CLI_INSTALL_ZSH=false
+
+industrious_API_PORT=9992
+industrious_API_CONTAINER_PORT=9992
 
 ### ELASTICSEARCH #########################################
 
