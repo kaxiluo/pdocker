@@ -29,7 +29,8 @@ RUN set -eux \
             libjpeg-dev libpng-dev  libfreetype6-dev libwebp-dev \
             libssl-dev libmcrypt-dev  libonig-dev \
             libc-client-dev libkrb5-dev \
-            libxslt-dev librabbitmq-dev
+            libxslt-dev librabbitmq-dev \
+            libcurl4-openssl-dev
 
 COPY src/* /tmp/
 
@@ -85,7 +86,7 @@ RUN if [ ${INSTALL_SWOOLE} = true ]; then \
     cd /tmp && \
     tar -zxvf swoole-${SWOOLE_VERSION}.tgz && \
     mv swoole-${SWOOLE_VERSION} /usr/src/php/ext/swoole \
-    && docker-php-ext-configure swoole --enable-openssl --enable-mysqlnd \
+    && docker-php-ext-configure swoole --enable-openssl --enable-http2 --enable-mysqlnd --enable-swoole-curl --enable-swoole-json \
     && docker-php-ext-install swoole \
 ;fi
 
