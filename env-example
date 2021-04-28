@@ -75,19 +75,6 @@ PHP74_CLI_INSTALL_ZSH=false
 industrious_API_PORT=9992
 industrious_API_CONTAINER_PORT=9992
 
-### ELASTICSEARCH #########################################
-
-ELASTICSEARCH_HOST_HTTP_PORT=9200
-ELASTICSEARCH_HOST_TRANSPORT_PORT=9300
-
-### KIBANA ################################################
-
-KIBANA_HTTP_PORT=5601
-
-### ELK Stack ##################################################
-
-ELK_VERSION=7.9.1
-
 ### MONGODB ###############################################
 
 MONGODB_PORT=27017
