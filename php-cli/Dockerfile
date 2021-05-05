@@ -5,9 +5,15 @@ ARG X_PHP_VERSION
 
 RUN set -ex \
     && cd /tmp \
-    && sed -i 's/deb.debian.org/mirrors.aliyun.com/' /etc/apt/sources.list \
-    && sed -i 's/security.debian.org/mirrors.aliyun.com/' /etc/apt/sources.list \
-    && sed -i 's/security-cdn.debian.org/mirrors.aliyun.com/' /etc/apt/sources.list
+    && { \
+		echo "deb https://mirrors.tuna.tsinghua.edu.cn/debian/ buster main contrib non-free"; \
+		echo "deb https://mirrors.tuna.tsinghua.edu.cn/debian/ buster-updates main contrib non-free"; \
+		echo "deb https://mirrors.tuna.tsinghua.edu.cn/debian/ buster-backports main contrib non-free"; \
+		echo "deb https://mirrors.tuna.tsinghua.edu.cn/debian-security buster/updates main contrib non-free"; \
+	} > /etc/apt/sources.list ;
+    #&& sed -i 's/deb.debian.org/mirrors.aliyun.com/' /etc/apt/sources.list \
+    #&& sed -i 's/security.debian.org/mirrors.aliyun.com/' /etc/apt/sources.list \
+    #&& sed -i 's/security-cdn.debian.org/mirrors.aliyun.com/' /etc/apt/sources.list
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV TZ=PRC
@@ -30,7 +36,8 @@ RUN set -eux \
             libssl-dev libmcrypt-dev  libonig-dev \
             libc-client-dev libkrb5-dev \
             libxslt-dev librabbitmq-dev \
-            libcurl4-openssl-dev
+            libcurl4-openssl-dev \
+            libnghttp2-dev
 
 COPY src/* /tmp/
 

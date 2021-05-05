@@ -61,14 +61,10 @@ services:
         - ./php-fpm/php7.4.ini:/usr/local/etc/php/php.ini
         - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
         tty: true
-        ports:
-        - "${hyperf_API_PORT}:${hyperf_API_CONTAINER_PORT}"
         expose:
         - "9000"
         networks:
         - base-bridge
-        extra_hosts:
-          pd.local: ${HOSTIP}
 
 ### PHP-CLI ########################################  
     php7.1-cli:
@@ -86,7 +82,7 @@ services:
         - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
         tty: true
         ports:
-        - "${cqgg_jobs_API_PORT}:${cqgg_jobs_API_CONTAINER_PORT}"
+        - "${cqgg_jobs_api_PORT}:${cqgg_jobs_api_CONTAINER_PORT}"
         networks:
         - base-bridge
 
@@ -105,9 +101,13 @@ services:
           - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
           tty: true
           ports:
-          - "${industrious_API_PORT}:${industrious_API_CONTAINER_PORT}"
+          - "${hyperf_PORT}:${hyperf_CONTAINER_PORT}"
+          - "${b2c_to_shopify_PORT}:${b2c_to_shopify_CONTAINER_PORT}"
+          - "${industrious_api_PORT}:${industrious_api_CONTAINER_PORT}"
           networks:
-          - base-bridge        
+          - base-bridge 
+          extra_hosts:
+            pd.local: ${HOSTIP}       
 
 ### Redis ########################################            
     redis:
