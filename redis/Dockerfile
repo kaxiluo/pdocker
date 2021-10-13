@@ -1,4 +1,4 @@
-FROM redis:5.0.9
+FROM redis:latest
 
 RUN set -xe \
     && sed -i 's/deb.debian.org/mirrors.aliyun.com/' /etc/apt/sources.list \
@@ -8,7 +8,7 @@ RUN set -xe \
 RUN set -xe \
     && apt-get update -yqq \
     && apt-get install -yqq apt-utils procps vim
-
+    
 ## For security settings uncomment, make the dir, copy conf, and also start with the conf, to use it
 RUN mkdir -p /usr/local/etc/redis
 COPY redis.conf /usr/local/etc/redis/redis.conf

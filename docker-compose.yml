@@ -3,114 +3,15 @@ version: "3.8"
 networks: 
   base-bridge:
       driver: bridge
+volumes:
+  mongodata:
+    #external: true
+    name:  mongodata
 
 services: 
-### PHP-FPM ########################################  
-    php7.1-fpm:
-        build:
-          context: ./php-fpm
-          args:
-            - X_PHP_VERSION=7.1
-            - INSTALL_XDEBUG=${PHP71_FPM_INSTALL_XDEBUG}
-            - INSTALL_SWOOLE=${PHP71_FPM_INSTALL_SWOOLE}
-            - SWOOLE_VERSION=${PHP71_FPM_SWOOLE_VERSION}
-            - INSTALL_WKHTMLTOPDF=${PHP71_FPM_INSTALL_WKHTMLTOPDF}
-            - INSTALL_ZSH=${PHP71_FPM_INSTALL_ZSH}
-        volumes:
-        - ./php-fpm/php7.1.ini:/usr/local/etc/php/php.ini
-        - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
-        tty: true
-        expose:
-        - "9000"
-        networks:
-        - base-bridge  
-    php7.3-fpm:
-        build:
-          context: ./php-fpm
-          args:
-            - X_PHP_VERSION=7.3
-            - INSTALL_XDEBUG=${PHP73_FPM_INSTALL_XDEBUG}
-            - INSTALL_SWOOLE=${PHP73_FPM_INSTALL_SWOOLE}
-            - SWOOLE_VERSION=${PHP73_FPM_SWOOLE_VERSION}
-            - INSTALL_XHPROF=${PHP73_FPM_INSTALL_XHPROF}
-            - INSTALL_WKHTMLTOPDF=${PHP73_FPM_INSTALL_WKHTMLTOPDF}
-            - INSTALL_ZSH=${PHP73_FPM_INSTALL_ZSH}
-        volumes:
-        - ./php-fpm/php7.3.ini:/usr/local/etc/php/php.ini
-        - ./php-fpm/php7.3-fpm.conf:/usr/local/etc/php-fpm.d/php7.3-fpm.conf
-        - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
-        - ${PHP73_FPM_LOG_PATH}:/var/log/php7.3-fpm
-        tty: true
-        expose:
-        - "9000"
-        networks:
-        - base-bridge 
-        cap_add:
-        - SYS_PTRACE
-    php7.4-fpm:
-        build:
-          context: ./php-fpm
-          args:
-            - X_PHP_VERSION=7.4
-            - INSTALL_XDEBUG=${PHP74_FPM_INSTALL_XDEBUG}
-            - INSTALL_SWOOLE=${PHP74_FPM_INSTALL_SWOOLE}
-            - SWOOLE_VERSION=${PHP74_FPM_SWOOLE_VERSION}
-            - INSTALL_WKHTMLTOPDF=${PHP74_FPM_INSTALL_WKHTMLTOPDF}
-            - INSTALL_ZSH=${PHP74_FPM_INSTALL_ZSH}
-        volumes:
-        - ./php-fpm/php7.4.ini:/usr/local/etc/php/php.ini
-        - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
-        tty: true
-        expose:
-        - "9000"
-        networks:
-        - base-bridge
-
-### PHP-CLI ########################################  
-    php7.1-cli:
-        build:
-          context: ./php-cli
-          args:
-            - X_PHP_VERSION=7.1
-            - INSTALL_XDEBUG=${PHP71_CLI_INSTALL_XDEBUG}
-            - INSTALL_SWOOLE=${PHP71_CLI_INSTALL_SWOOLE}
-            - SWOOLE_VERSION=${PHP71_CLI_SWOOLE_VERSION}
-            - INSTALL_WKHTMLTOPDF=${PHP71_CLI_INSTALL_WKHTMLTOPDF}
-            - INSTALL_ZSH=${PHP71_CLI_INSTALL_ZSH}
-        volumes:
-        - ./php-cli/php7.1.ini:/usr/local/etc/php/php.ini
-        - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
-        tty: true
-        ports:
-        - "${cqgg_jobs_api_PORT}:${cqgg_jobs_api_CONTAINER_PORT}"
-        networks:
-        - base-bridge
-
-    php7.4-cli:
-          build:
-            context: ./php-cli
-            args:
-              - X_PHP_VERSION=7.4
-              - INSTALL_XDEBUG=${PHP74_CLI_INSTALL_XDEBUG}
-              - INSTALL_SWOOLE=${PHP74_CLI_INSTALL_SWOOLE}
-              - SWOOLE_VERSION=${PHP74_CLI_SWOOLE_VERSION}
-              - INSTALL_WKHTMLTOPDF=${PHP74_CLI_INSTALL_WKHTMLTOPDF}
-              - INSTALL_ZSH=${PHP74_CLI_INSTALL_ZSH}
-          volumes:
-          - ./php-cli/php7.4.ini:/usr/local/etc/php/php.ini
-          - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
-          tty: true
-          ports:
-          - "${hyperf_PORT}:${hyperf_CONTAINER_PORT}"
-          - "${b2c_to_shopify_PORT}:${b2c_to_shopify_CONTAINER_PORT}"
-          - "${industrious_api_PORT}:${industrious_api_CONTAINER_PORT}"
-          networks:
-          - base-bridge 
-          extra_hosts:
-            pd.local: ${HOSTIP}       
-
 ### Redis ########################################            
     redis:
+        #image: ${DOCKER_USER}/redis
         build: ./redis
         volumes:
         - ${DATA_PATH_HOST}/redis:/data
@@ -119,26 +20,9 @@ services:
         networks:
         - base-bridge  
 
-### Nginx(tengine) ########################################         
-    nginx:  
-        build: ./nginx
-        volumes:
-        - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
-        - ${NGINX_HOST_LOG_PATH}:/var/log/nginx
-        - ${NGINX_SITES_PATH}:/etc/nginx/sites-available
-        - ${NGINX_SSL_PATH}:/etc/nginx/ssl
-        ports:
-        - "80:80"
-        - "443:443"
-        - "8443:8443"
-        networks:
-        - base-bridge
-        depends_on:
-        - php7.1-fpm
-        - php7.3-fpm 
-
 ### Rabbitmq ########################################          
     rabbitmq:
+        #image: ${DOCKER_USER}/rabbitmq
         build: ./rabbitmq
         ports:
           - "${RABBITMQ_NODE_HOST_PORT}:5672"
@@ -151,24 +35,173 @@ services:
         volumes:
           - ${DATA_PATH_HOST}/rabbitmq:/var/lib/rabbitmq/mnesia
         networks:
-        - base-bridge  
-
-### Consul ##############################################
-    consul:
-        build:
-          context: ./consul
-        ports: 
-          - "8500:8500"
-        networks:
-          - base-bridge   
+        - base-bridge   
 
 ### MongoDB ##############################################
     mongo:
+      #image: ${DOCKER_USER}/mongo
       build: ./mongo
       ports:
         - "${MONGODB_PORT}:27017"
       volumes:
-        - ${DATA_PATH_HOST}/mongo:/data/db
-        - ${DATA_PATH_HOST}/mongo_config:/data/configdb
+        - mongodata:/data/db
+        #- ${DATA_PATH_HOST}/mongo_config:/data/configdb
       networks:
-        - base-bridge         
+        - base-bridge   
+
+### Nginx(tengine) ########################################         
+    nginx:
+      #image: ${DOCKER_USER}/nginx
+      build: ./nginx
+      volumes:
+        - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
+        - ${NGINX_HOST_LOG_PATH}:/var/log/nginx
+        - ${NGINX_SITES_PATH}:/etc/nginx/sites-available
+        - ${NGINX_SSL_PATH}:/etc/nginx/ssl
+      ports:
+        - "80:80"
+        - "81:81"
+        - "443:443"
+        - "8443:8443"
+      networks:
+        - base-bridge
+
+### ElasticSearch ########################################
+    elasticsearch:
+      #image: ${DOCKER_USER}/elasticsearch
+      build:
+        context: ./elasticsearch
+        args:
+          - ELK_VERSION=${ELK_VERSION}
+      volumes:
+        - ${DATA_PATH_HOST}/elasticsearch:/usr/share/elasticsearch/data
+      environment:
+        - cluster.name=docker-cluster
+        - node.name=docker-node
+        - bootstrap.memory_lock=true
+        - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+        - cluster.initial_master_nodes=docker-node
+      ulimits:
+        memlock:
+          soft: -1
+          hard: -1
+        nofile:
+          soft: 65536
+          hard: 65536
+      ports:
+        - "${ELASTICSEARCH_HOST_HTTP_PORT}:9200"
+        - "${ELASTICSEARCH_HOST_TRANSPORT_PORT}:9300"
+      networks:
+        - base-bridge
+
+### Logstash ##############################################
+    #logstash
+
+### Kibana ##############################################
+    kibana:
+      #image: ${DOCKER_USER}/kibana
+      build:
+        context: ./kibana
+        args:
+          - ELK_VERSION=${ELK_VERSION}
+      volumes:
+        - ./kibana/kibana.yml:/usr/share/kibana/config/kibana.yml
+      ports:
+        - "${KIBANA_HTTP_PORT}:5601"
+      depends_on:
+        - elasticsearch
+      networks:
+        - base-bridge
+
+################################################       
+### PHP ######################################## 
+#######PHP7.1-FPM 
+    php7.1-fpm:
+        build:
+          context: ./php-fpm
+          args:
+            - X_PHP_VERSION=7.1
+            - INSTALL_WKHTMLTOPDF=${PHP71_FPM_INSTALL_WKHTMLTOPDF}
+        volumes:
+        - ./php-fpm/php7.1.ini:/usr/local/etc/php/php.ini
+        - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
+        - ./logs/php7.1-fpm/:/var/log/php7.1-fpm
+        tty: true
+        privileged: true
+        expose:
+        - "9000"
+        networks:
+        - base-bridge  
+#######PHP7.3-FPM  
+    php7.3-fpm:
+        build:
+          context: ./php-fpm
+          args:
+            - X_PHP_VERSION=7.3
+            - INSTALL_WKHTMLTOPDF=${PHP73_FPM_INSTALL_WKHTMLTOPDF}
+        volumes:
+        - ./php-fpm/php7.3.ini:/usr/local/etc/php/php.ini
+        - ./php-fpm/php7.3-fpm.conf:/usr/local/etc/php-fpm.d/php7.3-fpm.conf
+        - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
+        - ${PHP73_FPM_LOG_PATH}:/var/log/php7.3-fpm
+        tty: true
+        expose:
+        - "9000"
+        ports:
+        - "${PHP73_FPM_TMP_PORT}:7777"
+        cap_add:
+        - SYS_PTRACE
+        networks:
+        - base-bridge          
+#######PHP7.4-FPM    
+    php7.4-fpm:
+        build:
+          context: ./php-fpm
+          args:
+            - X_PHP_VERSION=7.4
+            - INSTALL_WKHTMLTOPDF=${PHP74_FPM_INSTALL_WKHTMLTOPDF}
+        volumes:
+        - ./php-fpm/php7.4.ini:/usr/local/etc/php/php.ini
+        - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
+        - ${PHP74_FPM_LOG_PATH}:/var/log/php7.4-fpm
+        tty: true
+        expose:
+        - "9000"
+        ports:
+        - "${PHP74_FPM_TMP_PORT}:7777"
+        cap_add:
+        - SYS_PTRACE
+        networks:
+        - base-bridge  
+### PHP-CLI ########################################  
+#######PHP7.1-CLI
+    php7.1-cli:
+        build:
+          context: ./php-cli
+          args:
+            - X_PHP_VERSION=7.1
+            - INSTALL_WKHTMLTOPDF=${PHP71_CLI_INSTALL_WKHTMLTOPDF}
+        volumes:
+        - ./php-cli/php7.1.ini:/usr/local/etc/php/php.ini
+        - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
+        tty: true
+        ports:
+        - "${PHP71_CLI_TMP_PORT}:7777" 
+        networks:
+        - base-bridge          
+#######PHP7.4-CLI
+    php7.4-cli:
+        build:
+          context: ./php-cli
+          args:
+            - X_PHP_VERSION=7.4
+            - INSTALL_WKHTMLTOPDF=${PHP74_CLI_INSTALL_WKHTMLTOPDF}
+        volumes:
+        - ./php-cli/php7.4.ini:/usr/local/etc/php/php.ini
+        - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
+        tty: true
+        ports:
+        - "${PHP74_CLI_TMP_PORT}:7777"
+        - "9501:9501"
+        networks:
+        - base-bridge          
