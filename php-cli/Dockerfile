@@ -1,5 +1,5 @@
 ARG X_PHP_VERSION
-FROM php:${X_PHP_VERSION}-cli
+FROM linyiyong/php-cli:${X_PHP_VERSION}
 
 ARG X_PHP_VERSION
 
