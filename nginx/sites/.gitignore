@@ -1,3 +1,4 @@
 *.conf
 *.sconf
 !default.conf
+*.archive
