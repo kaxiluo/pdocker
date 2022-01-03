@@ -23,6 +23,11 @@ RUN if [ ${CHANGE_SOURCE} = true ]; then \
 
 COPY src/* /tmp/
 
+# php ext
+RUN set -ex \
+    && cd /tmp \
+    && docker-php-ext-install opcache
+
 # wkhtmltopdf
 ARG INSTALL_WKHTMLTOPDF=false
 RUN if [ ${INSTALL_WKHTMLTOPDF} = true ]; then \
