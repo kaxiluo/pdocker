@@ -134,6 +134,27 @@ services:
         - "9000"
         networks:
         - base-bridge  
+#######PHP7.2-FPM  
+    php7.2-fpm:
+        build:
+          context: ./php-fpm
+          args:
+            - X_PHP_VERSION=7.2
+            - INSTALL_WKHTMLTOPDF=${PHP72_FPM_INSTALL_WKHTMLTOPDF}
+        volumes:
+        - ./php-fpm/php7.2.ini:/usr/local/etc/php/php.ini
+        - ./php-fpm/php7.2-fpm.conf:/usr/local/etc/php-fpm.d/php7.2-fpm.conf
+        - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
+        - ${PHP72_FPM_LOG_PATH}:/var/log/php7.2-fpm
+        tty: true
+        expose:
+        - "9000"
+        ports:
+        - "${PHP72_FPM_TMP_PORT}:7777"
+        cap_add:
+        - SYS_PTRACE
+        networks:
+        - base-bridge          
 #######PHP7.3-FPM  
     php7.3-fpm:
         build:
