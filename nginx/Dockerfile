@@ -6,9 +6,11 @@ RUN set -ex \
     && sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
 
 ENV TENGINE_VERSION 2.3.3
-ENV TZ=PRC
+ENV TZ=Asia/Shanghai
 
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+# Bring in tzdata so users could set the timezones through the environment
+RUN  apk add --no-cache tzdata \
+   && ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 COPY src/tengine-$TENGINE_VERSION.tar.gz /tmp/tengine.tar.gz
 COPY src/headers-more-nginx-module-0.33.tar.gz /tmp/headers-more-nginx-module-0.33.tar.gz
@@ -133,11 +135,6 @@ RUN     addgroup -S nginx \
         && apk del .build-deps \
         && apk del .gettext \
         && mv /tmp/envsubst /usr/local/bin/ \
-        \
-        # Bring in tzdata so users could set the timezones through the environment
-        # variables
-        && apk add --no-cache tzdata \
-        \
         # forward request and error logs to docker log collector
         && ln -sf /dev/stdout /var/log/nginx/access.log \
         && ln -sf /dev/stderr /var/log/nginx/error.log
