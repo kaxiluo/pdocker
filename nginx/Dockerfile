@@ -5,12 +5,13 @@ FROM alpine:3.12
 RUN set -ex \
     && sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
 
-ENV TENGINE_VERSION 2.3.2
+ENV TENGINE_VERSION 2.3.3
 ENV TZ=PRC
 
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-COPY src/tengine-2.3.2.tar.gz /tmp/tengine.tar.gz
+COPY src/tengine-$TENGINE_VERSION.tar.gz /tmp/tengine.tar.gz
+COPY src/headers-more-nginx-module-0.33.tar.gz /tmp/headers-more-nginx-module-0.33.tar.gz
 
 ENV CONFIG "\
         --prefix=/etc/nginx \
@@ -84,9 +85,11 @@ RUN     addgroup -S nginx \
         && tar -zxC /usr/src -f /tmp/tengine.tar.gz \
         && rm /tmp/tengine.tar.gz \
         && cd /usr/src/tengine-$TENGINE_VERSION \
-        && curl -L "https://github.com/openresty/headers-more-nginx-module/archive/v0.33.tar.gz" -o more.tar.gz \
-        && tar -zxC /usr/src/tengine-$TENGINE_VERSION/modules -f more.tar.gz \
-	&& rm  more.tar.gz \
+        #&& curl -L "https://github.com/openresty/headers-more-nginx-module/archive/v0.33.tar.gz" -o more.tar.gz \
+        #&& tar -zxC /usr/src/tengine-$TENGINE_VERSION/modules -f more.tar.gz \
+        #&& rm  more.tar.gz \
+        && tar -zxC /usr/src/tengine-$TENGINE_VERSION/modules -f /tmp/headers-more-nginx-module-0.33.tar.gz \
+        && rm /tmp/headers-more-nginx-module-0.33.tar.gz \
 	&& ls -l /usr/src/tengine-$TENGINE_VERSION/modules \
 	&& ./configure $CONFIG --with-debug \
         && make -j$(getconf _NPROCESSORS_ONLN) \
