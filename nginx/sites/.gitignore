@@ -2,3 +2,5 @@
 *.sconf
 !default.conf
 *.archive
+
+!example/*
