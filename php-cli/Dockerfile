@@ -6,19 +6,8 @@ ARG X_PHP_VERSION
 ARG CHANGE_SOURCE=false
 RUN if [ ${CHANGE_SOURCE} = true ]; then \
     cd /tmp \
-    && { \
-        echo "deb https://mirrors.huaweicloud.com/debian/ buster main contrib non-free"; \
-        echo "deb https://mirrors.huaweicloud.com/debian/ buster-updates main contrib non-free"; \
-        echo "deb https://mirrors.huaweicloud.com/debian/ buster-backports main contrib non-free"; \
-        echo "deb https://mirrors.huaweicloud.com/debian-security/ buster/updates main contrib non-free"; \
-        echo "deb-src https://mirrors.huaweicloud.com/debian/ buster main contrib non-free"; \
-        echo "deb-src https://mirrors.huaweicloud.com/debian/ buster-updates main contrib non-free"; \
-        echo "deb-src https://mirrors.huaweicloud.com/debian/ buster-backports main contrib non-free"; \
-	} > /etc/apt/sources.list \
-    #&& sed -i 's/deb.debian.org/mirrors.aliyun.com/' /etc/apt/sources.list \
-    #&& sed -i 's/security.debian.org/mirrors.aliyun.com/' /etc/apt/sources.list \
-    #&& sed -i 's/security-cdn.debian.org/mirrors.aliyun.com/' /etc/apt/sources.list
-;fi
+    && cp /etc/apt/sources.list /etc/apt/sources.list.bak \
+    && sed -i -E 's/(deb|security).debian.org/mirrors.aliyun.com/g' /etc/apt/sources.list
 
 COPY src/* /tmp/
 
