@@ -7,7 +7,8 @@ ARG CHANGE_SOURCE=false
 RUN if [ ${CHANGE_SOURCE} = true ]; then \
     cd /tmp \
     && cp /etc/apt/sources.list /etc/apt/sources.list.bak \
-    && sed -i -E 's/(deb|security).debian.org/mirrors.aliyun.com/g' /etc/apt/sources.list
+    && sed -i -E 's/(deb|security).debian.org/mirrors.aliyun.com/g' /etc/apt/sources.list \
+;fi
 
 COPY src/* /tmp/
 
