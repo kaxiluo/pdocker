@@ -123,6 +123,11 @@ services:
           context: ./php-fpm
           args:
             - X_PHP_VERSION=7.1
+            - INSTALL_IMAGEMAGICK=true
+            - INSTALL_SWOOLE=false
+            - SWOOLE_VERSION=
+            - INSTALL_XDEBUG=true
+            - INSTALL_XHPROF=false
             - INSTALL_WKHTMLTOPDF=${PHP71_FPM_INSTALL_WKHTMLTOPDF}
         volumes:
         - ./php-fpm/php7.1.ini:/usr/local/etc/php/php.ini
@@ -140,6 +145,10 @@ services:
           context: ./php-fpm
           args:
             - X_PHP_VERSION=7.2
+            - INSTALL_IMAGEMAGICK=true
+            - INSTALL_SWOOLE=false
+            - INSTALL_XDEBUG=true
+            - INSTALL_XHPROF=false           
             - INSTALL_WKHTMLTOPDF=${PHP72_FPM_INSTALL_WKHTMLTOPDF}
         volumes:
         - ./php-fpm/php7.2.ini:/usr/local/etc/php/php.ini
@@ -161,6 +170,10 @@ services:
           context: ./php-fpm
           args:
             - X_PHP_VERSION=7.3
+            - INSTALL_IMAGEMAGICK=false
+            - INSTALL_SWOOLE=false
+            - INSTALL_XDEBUG=false
+            - INSTALL_XHPROF=true            
             - INSTALL_WKHTMLTOPDF=${PHP73_FPM_INSTALL_WKHTMLTOPDF}
         volumes:
         - ./php-fpm/php7.3.ini:/usr/local/etc/php/php.ini
@@ -182,6 +195,10 @@ services:
           context: ./php-fpm
           args:
             - X_PHP_VERSION=7.4
+            - INSTALL_IMAGEMAGICK=true
+            - INSTALL_SWOOLE=false
+            - INSTALL_XDEBUG=false
+            - INSTALL_XHPROF=true            
             - INSTALL_WKHTMLTOPDF=${PHP74_FPM_INSTALL_WKHTMLTOPDF}
         volumes:
         - ./php-fpm/php7.4.ini:/usr/local/etc/php/php.ini
@@ -195,7 +212,7 @@ services:
         cap_add:
         - SYS_PTRACE
         networks:
-        - base-bridge  
+        - base-bridge         
 ### PHP-CLI ########################################  
 #######PHP7.1-CLI
     php7.1-cli:
@@ -203,6 +220,8 @@ services:
           context: ./php-cli
           args:
             - X_PHP_VERSION=7.1
+            - INSTALL_SWOOLE=true
+            - INSTALL_XDEBUG=false
             - INSTALL_WKHTMLTOPDF=${PHP71_CLI_INSTALL_WKHTMLTOPDF}
         volumes:
         - ./php-cli/php7.1.ini:/usr/local/etc/php/php.ini
@@ -218,6 +237,9 @@ services:
           context: ./php-cli
           args:
             - X_PHP_VERSION=7.4
+            - INSTALL_SWOOLE=true
+            - SWOOLE_VERSION=
+            - INSTALL_XDEBUG=false
             - INSTALL_WKHTMLTOPDF=${PHP74_CLI_INSTALL_WKHTMLTOPDF}
         volumes:
         - ./php-cli/php7.4.ini:/usr/local/etc/php/php.ini
