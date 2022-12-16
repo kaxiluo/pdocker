@@ -153,6 +153,14 @@ RUN if [ ${INSTALL_WKHTMLTOPDF} = true ]; then \
     && apt -f install \
 ;fi
 
+#
+#--------------------------------------------------------------------------
+# Final Touch
+#--------------------------------------------------------------------------
+#
+
+COPY ./php-common.ini /usr/local/etc/php/conf.d
+
 # Clean up
 RUN apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \

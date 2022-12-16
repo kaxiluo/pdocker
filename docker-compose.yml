@@ -212,7 +212,31 @@ services:
         cap_add:
         - SYS_PTRACE
         networks:
-        - base-bridge         
+        - base-bridge       
+#######PHP8.2-FPM    
+    php8.2-fpm:
+        build:
+          context: ./php-fpm
+          args:
+            - X_PHP_VERSION=8.2
+            - INSTALL_IMAGEMAGICK=false
+            - INSTALL_SWOOLE=false
+            - INSTALL_XDEBUG=false
+            - INSTALL_XHPROF=false            
+            - INSTALL_WKHTMLTOPDF=false
+        volumes:
+        - ./php-fpm/php8.2.ini:/usr/local/etc/php/php.ini
+        - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
+        - ${PHP82_FPM_LOG_PATH}:/var/log/php8.2-fpm
+        tty: true
+        expose:
+        - "9000"
+        ports:
+        - "${PHP82_FPM_TMP_PORT}:7777"
+        cap_add:
+        - SYS_PTRACE
+        networks:
+        - base-bridge
 ### PHP-CLI ########################################  
 #######PHP7.1-CLI
     php7.1-cli:
@@ -251,3 +275,22 @@ services:
         - "9501:9501"
         networks:
         - base-bridge          
+#######PHP8.2-CLI
+    php8.2-cli:
+        build:
+          context: ./php-cli
+          args:
+            - X_PHP_VERSION=8.2
+            - INSTALL_IMAGEMAGICK=false
+            - INSTALL_SWOOLE=true
+            - SWOOLE_VERSION=
+            - INSTALL_XDEBUG=false
+            - INSTALL_WKHTMLTOPDF=false
+        volumes:
+        - ./php-cli/php8.2.ini:/usr/local/etc/php/php.ini
+        - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
+        tty: true
+        ports:
+        - "${PHP82_CLI_TMP_PORT}:7777"
+        networks:
+        - base-bridge         
