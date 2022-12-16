@@ -237,6 +237,7 @@ services:
           context: ./php-cli
           args:
             - X_PHP_VERSION=7.4
+            - INSTALL_IMAGEMAGICK=true
             - INSTALL_SWOOLE=true
             - SWOOLE_VERSION=
             - INSTALL_XDEBUG=false

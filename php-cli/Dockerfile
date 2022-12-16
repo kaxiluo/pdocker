@@ -10,6 +10,12 @@ RUN if [ ${CHANGE_SOURCE} = true ]; then \
     && sed -i -E 's/(deb|security).debian.org/mirrors.aliyun.com/g' /etc/apt/sources.list \
 ;fi
 
+# update
+RUN set -xe \
+    && apt-get update -y \
+    && pecl channel-update pecl.php.net \
+    && apt-get install -y --no-install-recommends
+
 # only use
 # php-xhprof-extension-5.0.4.tar.g
 # wkhtmltox_0.12.6-1.stretch_amd64.deb
