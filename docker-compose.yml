@@ -197,8 +197,8 @@ services:
             - X_PHP_VERSION=7.4
             - INSTALL_IMAGEMAGICK=true
             - INSTALL_SWOOLE=false
-            - INSTALL_XDEBUG=false
-            - INSTALL_XHPROF=true            
+            - INSTALL_XDEBUG=true
+            - INSTALL_XHPROF=false            
             - INSTALL_WKHTMLTOPDF=${PHP74_FPM_INSTALL_WKHTMLTOPDF}
         volumes:
         - ./php-fpm/php7.4.ini:/usr/local/etc/php/php.ini
