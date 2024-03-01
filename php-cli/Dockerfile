@@ -76,9 +76,9 @@ RUN set -eux; \
       elif [ $(php -r "echo PHP_VERSION_ID - PHP_RELEASE_VERSION;") = "70100" ]; then \
         pecl install swoole-4.5.11; \
       elif [ $(php -r "echo PHP_MAJOR_VERSION;") = "7" ]; then \
-        pecl install swoole-4.8.12; \
+        pecl install -D 'enable-openssl="yes"' swoole-4.8.12; \
       else \
-        pecl install swoole; \
+        pecl install -D 'enable-openssl="yes"' swoole; \
       fi; \
       docker-php-ext-enable swoole; \
       php -m | grep -q 'swoole'; \
