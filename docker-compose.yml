@@ -272,7 +272,6 @@ services:
         tty: true
         ports:
         - "${PHP74_CLI_TMP_PORT}:7777"
-        - "9501:9501"
         networks:
         - base-bridge          
 #######PHP8.2-CLI
