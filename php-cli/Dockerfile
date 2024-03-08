@@ -32,6 +32,7 @@ ARG INSTALL_IMAGEMAGICK=false
 ARG IMAGEMAGICK_VERSION=latest
 ENV IMAGEMAGICK_VERSION ${IMAGEMAGICK_VERSION}
 RUN if [ ${INSTALL_IMAGEMAGICK} = true ]; then \
+    apt-get update -y  && \
     apt-get install -yqq libmagickwand-dev libmagickcore-dev imagemagick && \
     if [ $(php -r "echo PHP_MAJOR_VERSION;") = "8" ]; then \
       cd /tmp && \
