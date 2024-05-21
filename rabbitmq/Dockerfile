@@ -15,6 +15,10 @@ EXPOSE 4369 5671 5672 15671 15672 25672
 #   && rabbitmqctl set_permissions -p industrious tim ".*" ".*" ".*" \
 #   && rabbitmqctl add_vhost cqgg-jobs \
 #   && rabbitmqctl set_permissions -p cqgg-jobs tim ".*" ".*" ".*" \
+#   && rabbitmqctl add_vhost callback \
+#   && rabbitmqctl set_permissions -p callback tim ".*" ".*" ".*" \
+#   && rabbitmqctl add_vhost notice-center \
+#   && rabbitmqctl set_permissions -p notice-center tim ".*" ".*" ".*" \
 #   && sed -i 's/true/false/' /etc/rabbitmq/conf.d/management_agent.disable_metrics_collector.conf \
 #   && rabbitmqctl stop
 
