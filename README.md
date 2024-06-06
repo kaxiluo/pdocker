@@ -8,10 +8,8 @@
 
 ### mongo
 
-### elk
+### elasticsearch
 
-### php
-
-#### php-fpm php-cli
+### php-fpm php-cli
 
 8.1  8.2 use production ini

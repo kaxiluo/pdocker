@@ -96,25 +96,6 @@ services:
       networks:
         - base-bridge
 
-### Logstash ##############################################
-    #logstash
-
-### Kibana ##############################################
-    kibana:
-      #image: ${DOCKER_USER}/kibana
-      build:
-        context: ./kibana
-        args:
-          - ELK_VERSION=${ELK_VERSION}
-      volumes:
-        - ./kibana/kibana.yml:/usr/share/kibana/config/kibana.yml
-      ports:
-        - "${KIBANA_HTTP_PORT}:5601"
-      depends_on:
-        - elasticsearch
-      networks:
-        - base-bridge
-
 ################################################       
 ### PHP ######################################## 
 #######PHP7.1-FPM 
@@ -122,13 +103,7 @@ services:
         build:
           context: ./php-fpm
           args:
-            - X_PHP_VERSION=7.1
-            - INSTALL_IMAGEMAGICK=true
-            - INSTALL_SWOOLE=false
-            - SWOOLE_VERSION=
-            - INSTALL_XDEBUG=true
-            - INSTALL_XHPROF=false
-            - INSTALL_WKHTMLTOPDF=${PHP71_FPM_INSTALL_WKHTMLTOPDF}
+            - PHP_VERSION=7.1
         volumes:
         - ./php-fpm/php7.1.ini:/usr/local/etc/php/php.ini
         - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
@@ -138,48 +113,18 @@ services:
         expose:
         - "9000"
         networks:
-        - base-bridge  
-#######PHP7.2-FPM  
-    php7.2-fpm:
-        build:
-          context: ./php-fpm
-          args:
-            - X_PHP_VERSION=7.2
-            - INSTALL_IMAGEMAGICK=true
-            - INSTALL_SWOOLE=false
-            - INSTALL_XDEBUG=true
-            - INSTALL_XHPROF=false           
-            - INSTALL_WKHTMLTOPDF=${PHP72_FPM_INSTALL_WKHTMLTOPDF}
-        volumes:
-        - ./php-fpm/php7.2.ini:/usr/local/etc/php/php.ini
-        - ./php-fpm/php7.2-fpm.conf:/usr/local/etc/php-fpm.d/php7.2-fpm.conf
-        - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
-        - ${PHP72_FPM_LOG_PATH}:/var/log/php7.2-fpm
-        tty: true
-        expose:
-        - "9000"
-        ports:
-        - "${PHP72_FPM_TMP_PORT}:7777"
-        cap_add:
-        - SYS_PTRACE
-        networks:
-        - base-bridge          
+        - base-bridge
 #######PHP7.3-FPM  
     php7.3-fpm:
         build:
           context: ./php-fpm
           args:
-            - X_PHP_VERSION=7.3
-            - INSTALL_IMAGEMAGICK=false
-            - INSTALL_SWOOLE=false
-            - INSTALL_XDEBUG=false
-            - INSTALL_XHPROF=true            
-            - INSTALL_WKHTMLTOPDF=${PHP73_FPM_INSTALL_WKHTMLTOPDF}
+            - PHP_VERSION=7.3
         volumes:
         - ./php-fpm/php7.3.ini:/usr/local/etc/php/php.ini
         - ./php-fpm/php7.3-fpm.conf:/usr/local/etc/php-fpm.d/php7.3-fpm.conf
         - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
-        - ${PHP73_FPM_LOG_PATH}:/var/log/php7.3-fpm
+        - ./logs/php7.3-fpm:/var/log/php7.3-fpm
         tty: true
         expose:
         - "9000"
@@ -194,16 +139,11 @@ services:
         build:
           context: ./php-fpm
           args:
-            - X_PHP_VERSION=7.4
-            - INSTALL_IMAGEMAGICK=true
-            - INSTALL_SWOOLE=false
-            - INSTALL_XDEBUG=true
-            - INSTALL_XHPROF=false            
-            - INSTALL_WKHTMLTOPDF=${PHP74_FPM_INSTALL_WKHTMLTOPDF}
+            - PHP_VERSION=7.4
         volumes:
         - ./php-fpm/php7.4.ini:/usr/local/etc/php/php.ini
         - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
-        - ${PHP74_FPM_LOG_PATH}:/var/log/php7.4-fpm
+        - ./logs/php7.4-fpm:/var/log/php7.4-fpm
         tty: true
         expose:
         - "9000"
@@ -218,16 +158,11 @@ services:
         build:
           context: ./php-fpm
           args:
-            - X_PHP_VERSION=8.2
-            - INSTALL_IMAGEMAGICK=false
-            - INSTALL_SWOOLE=false
-            - INSTALL_XDEBUG=false
-            - INSTALL_XHPROF=false            
-            - INSTALL_WKHTMLTOPDF=false
+            - PHP_VERSION=8.2
         volumes:
         - ./php-fpm/php8.2.ini:/usr/local/etc/php/php.ini
         - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
-        - ${PHP82_FPM_LOG_PATH}:/var/log/php8.2-fpm
+        - ./logs/php8.2-fpm:/var/log/php8.2-fpm
         tty: true
         expose:
         - "9000"
@@ -243,10 +178,7 @@ services:
         build:
           context: ./php-cli
           args:
-            - X_PHP_VERSION=7.1
-            - INSTALL_SWOOLE=true
-            - INSTALL_XDEBUG=false
-            - INSTALL_WKHTMLTOPDF=${PHP71_CLI_INSTALL_WKHTMLTOPDF}
+            - PHP_VERSION=7.1
         volumes:
         - ./php-cli/php7.1.ini:/usr/local/etc/php/php.ini
         - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
@@ -260,12 +192,7 @@ services:
         build:
           context: ./php-cli
           args:
-            - X_PHP_VERSION=7.4
-            - INSTALL_IMAGEMAGICK=false
-            - INSTALL_SWOOLE=true
-            - SWOOLE_VERSION=
-            - INSTALL_XDEBUG=false
-            - INSTALL_WKHTMLTOPDF=${PHP74_CLI_INSTALL_WKHTMLTOPDF}
+            - PHP_VERSION=7.4
         volumes:
         - ./php-cli/php7.4.ini:/usr/local/etc/php/php.ini
         - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
