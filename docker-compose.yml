@@ -206,12 +206,7 @@ services:
         build:
           context: ./php-cli
           args:
-            - X_PHP_VERSION=8.2
-            - INSTALL_IMAGEMAGICK=false
-            - INSTALL_SWOOLE=true
-            - SWOOLE_VERSION=
-            - INSTALL_XDEBUG=false
-            - INSTALL_WKHTMLTOPDF=false
+            - PHP_VERSION=8.2
         volumes:
         - ./php-cli/php8.2.ini:/usr/local/etc/php/php.ini
         - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
