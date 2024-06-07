@@ -11,7 +11,6 @@ volumes:
 services: 
 ### Redis ########################################            
     redis:
-        #image: ${DOCKER_USER}/redis
         build: ./redis
         volumes:
         - ${DATA_PATH_HOST}/redis:/data
@@ -22,7 +21,6 @@ services:
 
 ### Rabbitmq ########################################          
     rabbitmq:
-        #image: ${DOCKER_USER}/rabbitmq
         build: ./rabbitmq
         ports:
           - "${RABBITMQ_NODE_HOST_PORT}:5672"
@@ -39,7 +37,6 @@ services:
 
 ### MongoDB ##############################################
     mongo:
-      #image: ${DOCKER_USER}/mongo
       build: ./mongo
       ports:
         - "${MONGODB_PORT}:27017"
@@ -51,7 +48,6 @@ services:
 
 ### Nginx(tengine) ########################################         
     nginx:
-      #image: ${DOCKER_USER}/nginx
       build: ./nginx
       volumes:
         - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
@@ -70,7 +66,6 @@ services:
             
 ### ElasticSearch ########################################
     elasticsearch:
-      #image: ${DOCKER_USER}/elasticsearch
       build:
         context: ./elasticsearch
         args:
@@ -103,6 +98,7 @@ services:
         build:
           context: ./php-fpm
           args:
+            - DOCKER_REPOSITORY=${DOCKER_REPOSITORY}
             - PHP_VERSION=7.1
         volumes:
         - ./php-fpm/php7.1.ini:/usr/local/etc/php/php.ini
@@ -119,6 +115,7 @@ services:
         build:
           context: ./php-fpm
           args:
+            - DOCKER_REPOSITORY=${DOCKER_REPOSITORY}
             - PHP_VERSION=7.3
         volumes:
         - ./php-fpm/php7.3.ini:/usr/local/etc/php/php.ini
@@ -139,6 +136,7 @@ services:
         build:
           context: ./php-fpm
           args:
+            - DOCKER_REPOSITORY=${DOCKER_REPOSITORY}
             - PHP_VERSION=7.4
         volumes:
         - ./php-fpm/php7.4.ini:/usr/local/etc/php/php.ini
@@ -158,6 +156,7 @@ services:
         build:
           context: ./php-fpm
           args:
+            - DOCKER_REPOSITORY=${DOCKER_REPOSITORY}
             - PHP_VERSION=8.2
         volumes:
         - ./php-fpm/php8.2.ini:/usr/local/etc/php/php.ini
@@ -178,6 +177,7 @@ services:
         build:
           context: ./php-cli
           args:
+            - DOCKER_REPOSITORY=${DOCKER_REPOSITORY}
             - PHP_VERSION=7.1
         volumes:
         - ./php-cli/php7.1.ini:/usr/local/etc/php/php.ini
@@ -192,6 +192,7 @@ services:
         build:
           context: ./php-cli
           args:
+            - DOCKER_REPOSITORY=${DOCKER_REPOSITORY}
             - PHP_VERSION=7.4
         volumes:
         - ./php-cli/php7.4.ini:/usr/local/etc/php/php.ini
@@ -206,6 +207,7 @@ services:
         build:
           context: ./php-cli
           args:
+            - DOCKER_REPOSITORY=${DOCKER_REPOSITORY}
             - PHP_VERSION=8.2
         volumes:
         - ./php-cli/php8.2.ini:/usr/local/etc/php/php.ini
