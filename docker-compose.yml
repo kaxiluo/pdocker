@@ -48,7 +48,10 @@ services:
 
 ### Nginx(tengine) ########################################         
     nginx:
-      build: ./nginx
+      build: 
+        context: ./nginx
+        args:
+            - DOCKER_REPOSITORY=${DOCKER_REPOSITORY}
       volumes:
         - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
         - ${NGINX_HOST_LOG_PATH}:/var/log/nginx
@@ -63,6 +66,8 @@ services:
         base-bridge:
           aliases:
             - industrious-api.local
+            - th.local
+            - us.local
             
 ### ElasticSearch ########################################
     elasticsearch:
