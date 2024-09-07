@@ -74,7 +74,7 @@ services:
       build:
         context: ./elasticsearch
         args:
-          - ELK_VERSION=${ELK_VERSION}
+          - ELASTICSEARCH_VERSION=${ELASTICSEARCH_VERSION}
       volumes:
         - ${DATA_PATH_HOST}/elasticsearch:/usr/share/elasticsearch/data
       environment:
