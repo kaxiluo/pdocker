@@ -13,6 +13,8 @@ FROM redis:latest
 RUN mkdir -p /usr/local/etc/redis
 COPY redis.conf /usr/local/etc/redis/redis.conf
 
+RUN touch /var/log/redis.log && chown redis:redis /var/log/redis.log && chmod 755 /var/log/redis.log
+
 VOLUME /data
 
 EXPOSE 6379
