@@ -97,7 +97,27 @@ services:
         - base-bridge
 
 ################################################       
-### PHP ######################################## 
+### PHP ########################################
+#######PHP5.6-FPM 
+    php5.6-fpm:
+        build:
+          context: .
+          dockerfile: ./php-fpm/Dockerfile
+          args:
+            - DOCKER_REPOSITORY=${DOCKER_REPOSITORY}
+            - PHP_VERSION=5.6
+        volumes:
+        - ./php-fpm/php5.6.ini:/usr/local/etc/php/php.ini
+        - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
+        - ./logs/php5.6-fpm/:/var/log/php5.6-fpm
+        tty: true
+        privileged: true
+        expose:
+        - "9000"
+        cap_add:
+        - SYS_PTRACE  
+        networks:
+        - base-bridge
 #######PHP7.1-FPM 
     php7.1-fpm:
         build:
